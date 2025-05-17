@@ -88,12 +88,14 @@ export class DoctorService {
   }
 
 
-
+// ------------------------------------------------------------------------
   async findAllWithSpecialties() {
   return this.doctorRepository.query(`
-select *
-from doctor doc
-LEFT JOIN specialty spec ON doc.specialty_id = spec.specialty_id
-  `);
-}
+    SELECT *
+    FROM doctor doc
+    LEFT JOIN specialty spec ON doc.specialty_id = spec.specialty_id
+      `);
+  }
+// ------------------------------------------------------------------------
+
 }

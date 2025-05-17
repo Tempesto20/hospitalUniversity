@@ -13,8 +13,15 @@ export class PatientController {
   async findAll(): Promise<Patient[]> {
     return this.patientService.findAll();
   }
-
-  @Get(':id')
+  
+// ------------------------------------------------------------------------
+  @Get('/with-combines')
+  async findAllWithCombines() {
+    return this.patientService.findAllWithCombines();
+  }
+// ------------------------------------------------------------------------
+  
+@Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Patient> {
     return this.patientService.findOne(id);
   }

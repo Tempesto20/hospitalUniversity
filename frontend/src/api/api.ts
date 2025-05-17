@@ -19,8 +19,10 @@ export const createDoctor = (doctor: DoctorData) => api.post('/doctors', doctor)
 export const updateDoctor = (id: number, doctor: DoctorData) => api.put(`/doctors/${id}`, doctor);
 export const deleteDoctor = (id: number) => api.delete(`/doctors/${id}`);
 
-export const fetchCombineDoctors = () => api.get('/doctors/with-specialties');
 
+// ------------------------------------------------------------------------
+export const fetchCombineDoctors = () => api.get('/doctors/with-specialties');
+// ------------------------------------------------------------------------
 
 
 // Patient API

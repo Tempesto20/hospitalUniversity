@@ -24,6 +24,8 @@ const DoctorList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+
+// ------------------------------------------------------------------------
   useEffect(() => {
     const loadDoctors = async () => {
       try {
@@ -39,7 +41,7 @@ const DoctorList: React.FC = () => {
 
     loadDoctors();
   }, []);
-
+// ------------------------------------------------------------------------
   const handleAddClick = () => {
     setCurrentDoctor(null);
     setOpenForm(true);

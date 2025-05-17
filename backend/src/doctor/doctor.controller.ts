@@ -13,12 +13,12 @@ export class DoctorController {
   async findAll(): Promise<Doctor[]> {
     return this.doctorService.findAll();
   }
-
-@Get('/with-specialties')
-async findAllWithSpecialties() {
-  return this.doctorService.findAllWithSpecialties();
-}
-
+// ------------------------------------------------------------------------
+  @Get('/with-specialties')
+  async findAllWithSpecialties() {
+    return this.doctorService.findAllWithSpecialties();
+  }
+// ------------------------------------------------------------------------
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Doctor> {
     return this.doctorService.findOne(id);

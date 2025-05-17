@@ -55,4 +55,43 @@ export class PatientService {
     await this.patientRepository.delete(id);
     return { message: `Patient with ID ${id} successfully deleted` };
   }
+
+
+// ------------------------------------------------------------------------
+  async findAllWithCombines() {
+  return this.patientRepository.query(`
+    SELECT
+      pat.patient_id,
+      pat.full_name as patient_full_name,
+      pat.birth_date,
+      pat.insurance_policy,
+      pat.passport,
+      pat.admission_date,
+      pat.discharge_date,
+      wa.ward_number,
+      dep.department_name,
+      doc.full_name as doctor_full_name,
+      appo.diagnos,
+      appo.symptom,
+      appo.allergy,
+      appo.preparation
+    FROM patient pat
+    LEFT JOIN appointment appo ON pat.patient_id = appo.patient_id
+    LEFT JOIN ward wa ON appo.ward_id = wa.ward_id
+    LEFT JOIN department dep ON wa.department_id = dep.department_id
+    LEFT JOIN doctor doc ON wa.doctor_id = doc.doctor_id
+      `);
+  }
+// ------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 }

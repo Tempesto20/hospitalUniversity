@@ -16,7 +16,7 @@ const DoctorItem: React.FC<DoctorItemProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell>{doctor.specialty_id}</TableCell>
+      <TableCell>{doctor.doctor_id}</TableCell>
       <TableCell>{doctor.full_name}</TableCell>
       <TableCell>{doctor.specialty_name || 'No specialty'}</TableCell>
       <TableCell>   

@@ -17,6 +17,9 @@ export class SpecialtyService {
   async findAll(): Promise<Specialty[]> {
     return this.specialtyRepository.find({
       relations: ['doctors'],
+        order: {
+          specialty_id: 'ASC' // Сортировка по specialty_id по возрастанию
+    }
     });
   }
 

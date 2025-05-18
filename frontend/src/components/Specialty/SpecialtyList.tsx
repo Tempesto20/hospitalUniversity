@@ -102,7 +102,7 @@ const SpecialtyList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              
+              <TableCell>Номер специальности</TableCell>
               <TableCell>Название специальности</TableCell>
               <TableCell>Действия</TableCell>
             </TableRow>

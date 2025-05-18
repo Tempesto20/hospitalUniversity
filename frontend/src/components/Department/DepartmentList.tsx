@@ -110,7 +110,7 @@ const DepartmentList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              
+              <TableCell>Номер отделения</TableCell>              
               <TableCell>Название отделения</TableCell>
               <TableCell>Действия</TableCell>
             </TableRow>

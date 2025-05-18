@@ -15,6 +15,9 @@ export class DepartmentService {
   async findAll(): Promise<Department[]> {
     return this.departmentRepository.find({
       relations: ['wards'],
+        order: {
+          department_id: 'ASC' // Сортировка по department_id по возрастанию
+    }
     });
   }
 

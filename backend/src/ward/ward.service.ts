@@ -59,12 +59,13 @@ export class WardService {
   async findAllWithWards() {
   return this.wardRepository.query(`
     SELECT 
-    wa.ward_number,
-    dep.department_name,
-    doc.full_name as doctor_full_name
+        wa.ward_number,
+        dep.department_name,
+        doc.full_name as doctor_full_name
     FROM ward wa
     LEFT JOIN department dep ON wa.department_id = dep.department_id
     LEFT JOIN doctor doc ON wa.doctor_id = doc.doctor_id
+    ORDER BY wa.ward_number::integer ASC
       `);
   }
 // ------------------------------------------------------------------------

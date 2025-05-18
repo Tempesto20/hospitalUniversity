@@ -94,6 +94,7 @@ export class DoctorService {
     SELECT *
     FROM doctor doc
     LEFT JOIN specialty spec ON doc.specialty_id = spec.specialty_id
+    ORDER BY doctor_id ASC
       `);
   }
 // ------------------------------------------------------------------------

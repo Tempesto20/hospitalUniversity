@@ -80,6 +80,7 @@ export class PatientService {
     LEFT JOIN ward wa ON appo.ward_id = wa.ward_id
     LEFT JOIN department dep ON wa.department_id = dep.department_id
     LEFT JOIN doctor doc ON wa.doctor_id = doc.doctor_id
+    ORDER BY pat.patient_id ASC
       `);
   }
 // ------------------------------------------------------------------------

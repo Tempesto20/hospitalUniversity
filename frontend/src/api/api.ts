@@ -32,6 +32,12 @@ export const createPatient = (patient: PatientData) => api.post('/patients', pat
 export const updatePatient = (id: number, patient: PatientData) => api.put(`/patients/${id}`, patient);
 export const deletePatient = (id: number) => api.delete(`/patients/${id}`);
 
+
+// ------------------------------------------------------------------------
+export const fetchCombinePatients = () => api.get('/doctors/with-combines');
+// ------------------------------------------------------------------------
+
+
 // Department API
 export const fetchDepartments = () => api.get('/departments');
 export const fetchDepartment = (id: number) => api.get(`/departments/${id}`);

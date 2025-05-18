@@ -4,12 +4,12 @@ import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage';
 import SpecialtyList from './components/Specialty/SpecialtyList';
 import DoctorList from './components/Doctor/DoctorList';
-// import PatientList from './components/Patient/PatientList';
+import PatientList from './components/Patient/PatientList';
 import DepartmentList from './components/Department/DepartmentList';
 import WardList from './components/Ward/WardList';
 import AppointmentList from './components/Appointment/AppointmentList';
 import NotFoundPage from './pages/NotFoundPage';
-import PatientsListPage from './pages/PatientsListPage';
+// import PatientsListPage from './pages/PatientsListPage';
 
 const App: React.FC = () => {
   return (
@@ -19,12 +19,12 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/specialties" element={<SpecialtyList />} />
           <Route path="/doctors" element={<DoctorList />} />
-          {/* <Route path="/patients" element={<PatientList />} /> */}
+          <Route path="/patients" element={<PatientList />} />
           <Route path="/departments" element={<DepartmentList />} />
           <Route path="/wards" element={<WardList />} />
           <Route path="/appointments" element={<AppointmentList />} />
           <Route path="*" element={<NotFoundPage />} />
-          <Route path="/patients" element={<PatientsListPage />} />
+          {/* <Route path="/patients" element={<PatientsListPage />} /> */}
         </Routes>
       </Layout>
     </Router>

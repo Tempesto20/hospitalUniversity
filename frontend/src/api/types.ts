@@ -10,15 +10,41 @@ export interface DoctorData {
   specialty_id: number;
 }
 
+// export interface PatientData {
+//   preparation: string;
+//   allergy: string;
+//   symptom: string;
+//   diagnos: string;
+//   doctor_full_name: string;
+//   department_name: string;
+//   ward_number: string;
+//   patient_full_name: string;
+//   patient_id?: number;
+//   full_name: string;
+//   birth_date: string;
+//   insurance_policy: string;
+//   passport: string;
+//   admission_date: string;
+//   discharge_date?: string | number | Date | undefined | any;
+// }
+
 export interface PatientData {
-  patient_id?: number;
-  full_name: string;
+  patient_id: number;
+  patient_full_name: string;
   birth_date: string;
   insurance_policy: string;
   passport: string;
   admission_date: string;
-  discharge_date?: string | number | Date | undefined | any;
+  discharge_date?: string  | null;
+  ward_number?: string;
+  department_name?: string;
+  doctor_full_name?: string;
+  diagnos?: string;
+  symptom?: string;
+  allergy?: string;
+  preparation?: string;
 }
+
 
 export interface DepartmentData {
   department_id?: number;

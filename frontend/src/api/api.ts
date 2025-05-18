@@ -34,7 +34,7 @@ export const deletePatient = (id: number) => api.delete(`/patients/${id}`);
 
 
 // ------------------------------------------------------------------------
-export const fetchCombinePatients = () => api.get('/doctors/with-combines');
+export const fetchCombinePatients = () => api.get('/patients/with-combines');
 // ------------------------------------------------------------------------
 
 

@@ -8,6 +8,7 @@ import {
   Button,
   Box
 } from '@mui/material';
+import { format } from 'date-fns';
 import { PatientData } from '../../api/types';
 
 interface PatientFormProps {
@@ -17,26 +18,34 @@ interface PatientFormProps {
   patient: PatientData | null;
 }
 
+// Создаем тип для формы, исключая patient_id и добавляя правильные типы
+type PatientFormData = Omit<PatientData, 'patient_id'> & {
+  discharge_date?: string;
+};
+
 const PatientForm: React.FC<PatientFormProps> = ({ 
   open, 
   onClose, 
   onSubmit, 
   patient 
 }) => {
-  const [formData, setFormData] = useState<Omit<PatientData, 'patient_id'>>({
-    full_name: '',
-    birth_date: new Date().toISOString().split('T')[0],
+  const today = format(new Date(), 'yyyy-MM-dd');
+  
+  const [formData, setFormData] = useState<PatientFormData>({
+    patient_full_name: '',
+    birth_date: today,
     insurance_policy: '',
     passport: '',
-    admission_date: new Date().toISOString().split('T')[0],
+    admission_date: today,
     discharge_date: ''
   });
+  
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (patient) {
       setFormData({
-        full_name: patient.full_name,
+        patient_full_name: patient.patient_full_name,
         birth_date: patient.birth_date,
         insurance_policy: patient.insurance_policy,
         passport: patient.passport,
@@ -45,15 +54,15 @@ const PatientForm: React.FC<PatientFormProps> = ({
       });
     } else {
       setFormData({
-        full_name: '',
-        birth_date: new Date().toISOString().split('T')[0],
+        patient_full_name: '',
+        birth_date: today,
         insurance_policy: '',
         passport: '',
-        admission_date: new Date().toISOString().split('T')[0],
+        admission_date: today,
         discharge_date: ''
       });
     }
-  }, [patient]);
+  }, [patient, today]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -66,15 +75,15 @@ const PatientForm: React.FC<PatientFormProps> = ({
   const validate = () => {
     const newErrors: Record<string, string> = {};
     
-    if (!formData.full_name.trim()) {
-      newErrors.full_name = 'Full name is required';
+    if (!formData.patient_full_name?.trim()) {
+      newErrors.patient_full_name = 'Full name is required';
     }
     
-    if (!formData.insurance_policy.match(/^[А-Я]{2}[0-9]{4}[А-Я]$/)) {
+    if (!formData.insurance_policy?.match(/^[А-Я]{2}[0-9]{4}[А-Я]$/)) {
       newErrors.insurance_policy = 'Invalid insurance policy format (XX9999X)';
     }
     
-    if (!formData.passport.match(/^[0-9]{2} [0-9]{2} [0-9]{6}$/)) {
+    if (!formData.passport?.match(/^[0-9]{2} [0-9]{2} [0-9]{6}$/)) {
       newErrors.passport = 'Invalid passport format (00 00 000000)';
     }
 
@@ -84,11 +93,13 @@ const PatientForm: React.FC<PatientFormProps> = ({
 
   const handleSubmit = () => {
     if (validate()) {
-      onSubmit({
+      const submitData: PatientData = {
         ...(patient?.patient_id ? { patient_id: patient.patient_id } : {}),
         ...formData,
-        discharge_date: formData.discharge_date || undefined
-      });
+        discharge_date: formData.discharge_date || null
+      } as PatientData;
+      
+      onSubmit(submitData);
     }
   };
 
@@ -102,11 +113,11 @@ const PatientForm: React.FC<PatientFormProps> = ({
           <TextField
             fullWidth
             label="Full Name"
-            name="full_name"
-            value={formData.full_name}
+            name="patient_full_name"
+            value={formData.patient_full_name}
             onChange={handleChange}
-            error={!!errors.full_name}
-            helperText={errors.full_name}
+            error={!!errors.patient_full_name}
+            helperText={errors.patient_full_name}
             margin="normal"
           />
 

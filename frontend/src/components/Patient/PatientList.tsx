@@ -9,7 +9,7 @@ import PatientForm from './PatientForm';
 import PatientItem from './PatientItem';
 import { PatientData } from '../../api/types';
 import { 
-  fetchPatients, 
+  fetchCombinePatients,
   createPatient, 
   updatePatient, 
   deletePatient 
@@ -27,7 +27,7 @@ const PatientList: React.FC = () => {
   useEffect(() => {
     const loadPatients = async () => {
       try {
-        const { data } = await fetchPatients();
+        const { data } = await fetchCombinePatients();
         setPatients(data);
         setLoading(false);
       } catch (err) {
@@ -110,13 +110,20 @@ const PatientList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              
-              <TableCell>ФИО</TableCell>
+              <TableCell>Номер пациента</TableCell>
+              <TableCell>ФИО пациента</TableCell>
               <TableCell>Дата рождения</TableCell>
-              <TableCell>Полис</TableCell>
+              <TableCell>Страховой полис</TableCell>
               <TableCell>Паспорт</TableCell>
+              <TableCell>Палата</TableCell>
+              <TableCell>Отделение</TableCell>
+              <TableCell>Лечащий врач</TableCell>
+              <TableCell>Диагноз</TableCell>
+              <TableCell>Симптомы</TableCell>
               <TableCell>Дата поступления</TableCell>
               <TableCell>Дата выписки</TableCell>
+              <TableCell>Аллергия к препаратам</TableCell>
+              <TableCell>Препараты</TableCell>
               <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>

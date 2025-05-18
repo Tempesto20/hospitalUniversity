@@ -16,12 +16,20 @@ const PatientItem: React.FC<PatientItemProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell>{patient.full_name}</TableCell>
-      <TableCell>{new Date(patient.birth_date).toLocaleDateString()}</TableCell>
-      <TableCell>{patient.insurance_policy}</TableCell>
-      <TableCell>{patient.passport}</TableCell>
-      <TableCell>{new Date(patient.admission_date).toLocaleDateString()}</TableCell>
-      <TableCell>{new Date(patient.discharge_date).toLocaleDateString()}</TableCell>
+      <TableCell>{patient.patient_id}</TableCell>
+      <TableCell>{patient.patient_full_name || '-'}</TableCell>
+      <TableCell>{patient.birth_date}</TableCell>
+      <TableCell>{patient.insurance_policy || '-'}</TableCell>
+      <TableCell>{patient.passport || '-'}</TableCell>
+      <TableCell>{patient.ward_number || '-'}</TableCell>
+      <TableCell>{patient.department_name || '-'}</TableCell>
+      <TableCell>{patient.doctor_full_name || '-'}</TableCell>
+      <TableCell>{patient.diagnos || '-'}</TableCell>
+      <TableCell>{patient.symptom || '-'}</TableCell>
+      <TableCell>{patient.admission_date}</TableCell>
+      <TableCell>{patient.discharge_date || '-'}</TableCell>
+      <TableCell>{patient.allergy || '-'}</TableCell>
+      <TableCell>{patient.preparation || '-'}</TableCell>
       <TableCell>
         <IconButton onClick={() => onEdit(patient)}>
           <Edit />

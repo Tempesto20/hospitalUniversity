@@ -52,6 +52,10 @@ export const createWard = (ward: WardData) => api.post('/wards', ward);
 export const updateWard = (id: number, ward: WardData) => api.put(`/wards/${id}`, ward);
 export const deleteWard = (id: number) => api.delete(`/wards/${id}`);
 
+// ------------------------------------------------------------------------
+export const fetchCombinehWards = () => api.get('/wards/with-wards');
+// ------------------------------------------------------------------------
+
 // Appointment API
 export const fetchAppointments = () => api.get('/appointments');
 export const fetchAppointment = (id: number) => api.get(`/appointments/${id}`);

@@ -54,10 +54,10 @@ export interface DepartmentData {
 }
 
 export interface WardData {
-  ward_id?: number;
+  ward_id?: number;  // сделали необязательным
   ward_number: string;
-  department_id: number;
-  doctor_id?: number;
+  department_name: string;
+  doctor_full_name: string;
 }
 
 export interface AppointmentData {

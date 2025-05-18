@@ -9,7 +9,7 @@ import WardForm from './WardForm';
 import WardItem from './WardItem';
 import { WardData } from '../../api/types';
 import { 
-  fetchWards, 
+  fetchCombinehWards, 
   createWard, 
   updateWard, 
   deleteWard 
@@ -27,7 +27,7 @@ const WardList: React.FC = () => {
   useEffect(() => {
     const loadWards = async () => {
       try {
-        const { data } = await fetchWards();
+        const { data } = await fetchCombinehWards();
         setWards(data);
         setLoading(false);
       } catch (err) {

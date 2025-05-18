@@ -21,7 +21,7 @@ const PatientsListPage = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/patients/with-combines');
+        const response = await axios.get('http://localhost:3000/wards/with-wards');
         console.log(response.data); 
         setPatients(response.data);
         setLoading(false);
@@ -69,39 +69,18 @@ const PatientsListPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>ФИО пациента</TableCell>
-              <TableCell>Дата рождения</TableCell>
-              <TableCell>Страховой полис</TableCell>
-              <TableCell>Паспорт</TableCell>
-              <TableCell>Палата</TableCell>
+              <TableCell>Номер палаты</TableCell>
               <TableCell>Отделение</TableCell>
-              <TableCell>Лечащий врач</TableCell>
-              <TableCell>Диагноз</TableCell>
-              <TableCell>Симптомы</TableCell>
-              <TableCell>Дата поступления</TableCell>
-              <TableCell>Дата выписки</TableCell>
-              <TableCell>Аллергия к препаратам</TableCell>
-              <TableCell>Препараты</TableCell>
+              <TableCell>Врач</TableCell>
+              <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {patients.map((patient) => (
-              <TableRow key={patient.patient_id}>
-                <TableCell>{patient.patient_id}</TableCell>
-                <TableCell>{patient.patient_full_name || '-'}</TableCell>
-                <TableCell>{formatDate(patient.birth_date)}</TableCell>
-                <TableCell>{patient.insurance_policy || '-'}</TableCell>
-                <TableCell>{patient.passport || '-'}</TableCell>
-                <TableCell>{patient.ward_number || '-'}</TableCell>
-                <TableCell>{patient.department_name || '-'}</TableCell>
-                <TableCell>{patient.doctor_full_name || '-'}</TableCell>
-                <TableCell>{patient.diagnos || '-'}</TableCell>
-                <TableCell>{patient.symptom || '-'}</TableCell>
-                <TableCell>{formatDate(patient.admission_date)}</TableCell>
-                <TableCell>{formatDate(patient.discharge_date)}</TableCell>
-                <TableCell>{patient.allergy || '-'}</TableCell>
-                <TableCell>{patient.preparation || '-'}</TableCell>
+            {patients.map((ward) => (
+              <TableRow key={ward.ward_id}>
+                <TableCell>{ward.ward_number}</TableCell>
+                <TableCell>{ward.department_name || '-'}</TableCell>
+                <TableCell>{ward.doctor_full_name || '-'}</TableCell>
               </TableRow>
             ))}
           </TableBody>

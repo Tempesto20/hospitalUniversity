@@ -14,6 +14,13 @@ export class WardController {
     return this.wardService.findAll();
   }
 
+  // ------------------------------------------------------------------------
+  @Get('/with-wards')
+  async findAllWithSpecialties() {
+    return this.wardService.findAllWithWards();
+  }
+// ------------------------------------------------------------------------
+
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Ward> {
     return this.wardService.findOne(id);

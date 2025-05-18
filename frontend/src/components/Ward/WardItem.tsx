@@ -16,9 +16,9 @@ const WardItem: React.FC<WardItemProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell>{ward.ward_number}</TableCell>
-      <TableCell>{ward.department_id}</TableCell>
-      <TableCell>{ward.doctor_id || 'None'}</TableCell>
+        <TableCell>{ward.ward_number}</TableCell>
+        <TableCell>{ward.department_name || '-'}</TableCell>
+        <TableCell>{ward.doctor_full_name || '-'}</TableCell>
       <TableCell>
         <IconButton onClick={() => onEdit(ward)}>
           <Edit />

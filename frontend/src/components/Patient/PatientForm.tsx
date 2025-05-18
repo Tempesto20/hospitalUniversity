@@ -8,7 +8,7 @@ import {
   Button,
   Box
 } from '@mui/material';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { PatientData } from '../../api/types';
 
 interface PatientFormProps {
@@ -18,7 +18,6 @@ interface PatientFormProps {
   patient: PatientData | null;
 }
 
-// Создаем тип для формы, исключая patient_id и добавляя правильные типы
 type PatientFormData = Omit<PatientData, 'patient_id'> & {
   discharge_date?: string;
 };
@@ -46,11 +45,13 @@ const PatientForm: React.FC<PatientFormProps> = ({
     if (patient) {
       setFormData({
         patient_full_name: patient.patient_full_name,
-        birth_date: patient.birth_date,
+        birth_date: format(parseISO(patient.birth_date), 'yyyy-MM-dd'),
         insurance_policy: patient.insurance_policy,
         passport: patient.passport,
-        admission_date: patient.admission_date,
-        discharge_date: patient.discharge_date || ''
+        admission_date: format(parseISO(patient.admission_date), 'yyyy-MM-dd'),
+        discharge_date: patient.discharge_date 
+          ? format(parseISO(patient.discharge_date), 'yyyy-MM-dd')
+          : ''
       });
     } else {
       setFormData({

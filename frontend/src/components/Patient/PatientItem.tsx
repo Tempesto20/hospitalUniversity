@@ -1,6 +1,7 @@
 import React from 'react';
 import { TableRow, TableCell, IconButton } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
+import { format, parseISO } from 'date-fns';
 import { PatientData } from '../../api/types';
 
 interface PatientItemProps {
@@ -14,11 +15,16 @@ const PatientItem: React.FC<PatientItemProps> = ({
   onEdit, 
   onDelete 
 }) => {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '-';
+    return format(parseISO(dateString), 'dd.MM.yyyy');
+  };
+
   return (
     <TableRow>
       <TableCell>{patient.patient_id}</TableCell>
       <TableCell>{patient.patient_full_name || '-'}</TableCell>
-      <TableCell>{patient.birth_date}</TableCell>
+      <TableCell>{formatDate(patient.birth_date)}</TableCell>
       <TableCell>{patient.insurance_policy || '-'}</TableCell>
       <TableCell>{patient.passport || '-'}</TableCell>
       <TableCell>{patient.ward_number || '-'}</TableCell>
@@ -26,8 +32,8 @@ const PatientItem: React.FC<PatientItemProps> = ({
       <TableCell>{patient.doctor_full_name || '-'}</TableCell>
       <TableCell>{patient.diagnos || '-'}</TableCell>
       <TableCell>{patient.symptom || '-'}</TableCell>
-      <TableCell>{patient.admission_date}</TableCell>
-      <TableCell>{patient.discharge_date || '-'}</TableCell>
+      <TableCell>{formatDate(patient.admission_date)}</TableCell>
+      <TableCell>{formatDate(patient.discharge_date)}</TableCell>
       <TableCell>{patient.allergy || '-'}</TableCell>
       <TableCell>{patient.preparation || '-'}</TableCell>
       <TableCell>

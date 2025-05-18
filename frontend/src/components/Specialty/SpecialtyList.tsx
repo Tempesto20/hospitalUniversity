@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Paper, Button, IconButton, Dialog, DialogTitle, 
-  DialogContent, DialogActions, TextField, Box, Typography 
+  TableRow, Paper, Button, Dialog, DialogTitle, 
+  DialogContent, DialogActions, Box, Typography 
 } from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import SpecialtyForm from './SpecialtyForm';
 import SpecialtyItem from './SpecialtyItem';
 import { SpecialtyData } from '../../api/types';

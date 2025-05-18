@@ -28,6 +28,7 @@ export interface DoctorData {
 //   discharge_date?: string | number | Date | undefined | any;
 // }
 
+
 export interface PatientData {
   patient_id: number;
   patient_full_name: string;
@@ -35,7 +36,7 @@ export interface PatientData {
   insurance_policy: string;
   passport: string;
   admission_date: string;
-  discharge_date?: string  | null;
+  discharge_date: string | null;
   ward_number?: string;
   department_name?: string;
   doctor_full_name?: string;
@@ -44,6 +45,7 @@ export interface PatientData {
   allergy?: string;
   preparation?: string;
 }
+
 
 
 export interface DepartmentData {

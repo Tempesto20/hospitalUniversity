@@ -63,4 +63,14 @@ export const createAppointment = (appointment: AppointmentData) => api.post('/ap
 export const updateAppointment = (id: number, appointment: AppointmentData) => api.put(`/appointments/${id}`, appointment);
 export const deleteAppointment = (id: number) => api.delete(`/appointments/${id}`);
 
+// ------------------------------------------------------------------------
+export const fetchCombinehAppointments = () => api.get('/appointments/with-appointments');
+// ------------------------------------------------------------------------
+
+
+
+
+
+
+
 export default api;

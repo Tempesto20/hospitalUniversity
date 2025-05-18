@@ -60,11 +60,31 @@ export interface WardData {
   doctor_full_name: string;
 }
 
+// export interface AppointmentData {
+//   doctor_full_name?: string;
+//   department_name?: string;
+//   ward_number?: number;
+//   patient_full_name?: string;
+//   appointment_id: number;
+//   patient_id: number;
+//   doctor_id: number;
+//   ward_id?: number;
+//   appointment_date: string;
+//   symptom?: string;
+//   diagnos?: string;
+//   allergy?: string;
+//   preparation?: string;
+// }
+
+
 export interface AppointmentData {
-  appointment_id?: number;
+  appointment_id?: number; // для новых записей может отсутствовать
   patient_id: number;
+  patient_full_name?: string;
   doctor_id: number;
-  ward_id?: number;
+  doctor_full_name?: string;
+  ward_number: number;
+  department_name?: string;
   appointment_date: string;
   symptom?: string;
   diagnos?: string;

@@ -14,6 +14,13 @@ export class AppointmentController {
     return this.appointmentService.findAll();
   }
 
+// ------------------------------------------------------------------------
+  @Get('/with-appointments')
+  async findAllWithAppointments() {
+    return this.appointmentService.findAllWithAppointments();
+  }
+// ------------------------------------------------------------------------
+
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Appointment> {
     return this.appointmentService.findOne(id);

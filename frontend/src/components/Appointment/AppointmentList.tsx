@@ -9,7 +9,7 @@ import AppointmentForm from './AppointmentForm';
 import AppointmentItem from './AppointmentItem';
 import { AppointmentData } from '../../api/types';
 import { 
-  fetchAppointments, 
+  fetchCombinehAppointments, 
   createAppointment, 
   updateAppointment, 
   deleteAppointment 
@@ -27,7 +27,7 @@ const AppointmentList: React.FC = () => {
   useEffect(() => {
     const loadAppointments = async () => {
       try {
-        const { data } = await fetchAppointments();
+        const { data } = await fetchCombinehAppointments();
         console.log('вывод данных ' + data);
         setAppointments(data);
         setLoading(false);
@@ -113,9 +113,10 @@ const AppointmentList: React.FC = () => {
             <TableRow>
               <TableCell>Номер приема</TableCell>
               <TableCell>Пациен</TableCell>
-              <TableCell>Доктор</TableCell>
               <TableCell>Номер палаты</TableCell>
+              <TableCell>Отделение</TableCell>
               <TableCell>Дата приема</TableCell>
+              <TableCell>Доктор</TableCell>
               <TableCell>Сиптомы</TableCell>
               <TableCell>Диагноз</TableCell>
               <TableCell>Аллергия</TableCell>

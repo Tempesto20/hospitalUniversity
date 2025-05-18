@@ -52,4 +52,34 @@ export class AppointmentService {
       );
     }
   }
+
+
+
+  
+// ------------------------------------------------------------------------
+  async findAllWithAppointments() {
+  return this.appointmentRepository.query(`
+   SELECT
+      appo.appointment_id,
+      pat.full_name as patient_full_name,
+	  doc.full_name as doctor_full_name,
+	  wa.ward_number,
+	  appo.appointment_date,
+      dep.department_name,
+	  appo.symptom,
+      appo.diagnos,
+      appo.allergy,
+      appo.preparation
+    FROM appointment appo
+    LEFT JOIN patient pat ON pat.patient_id = appo.patient_id
+    LEFT JOIN ward wa ON appo.ward_id = wa.ward_id
+    LEFT JOIN department dep ON wa.department_id = dep.department_id
+    LEFT JOIN doctor doc ON wa.doctor_id = doc.doctor_id
+      `);
+  }
+// ------------------------------------------------------------------------
+
+
+
+
 }

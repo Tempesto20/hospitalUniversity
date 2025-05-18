@@ -108,13 +108,13 @@ const handleSubmit = () => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        {ward ? 'Edit Ward' : 'Add New Ward'}
+        {ward ? 'Редактировать' : 'Добавить палату'}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ marginTop: 2 }}>
           <TextField
             fullWidth
-            label="Ward Number"
+            label="Номер палаты"
             name="ward_number"
             value={formData.ward_number}
             onChange={handleChange}
@@ -124,7 +124,7 @@ const handleSubmit = () => {
           <TextField
             select
             fullWidth
-            label="Department"
+            label="Отделение"
             name="department_name"
             value={formData.department_name}
             onChange={handleChange}
@@ -158,7 +158,7 @@ const handleSubmit = () => {
       <DialogActions>
         <Button onClick={onClose}>Назад</Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          {ward ? 'Update' : 'Create'}
+          {ward ? 'Редактировать' : 'Создать'}
         </Button>
       </DialogActions>
     </Dialog>

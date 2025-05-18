@@ -69,13 +69,13 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        {department ? 'Edit Department' : 'Add New Department'}
+        {department ? 'Редактировать отделение' : 'Добавить отделение'}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ marginTop: 2 }}>
           <TextField
             fullWidth
-            label="Department Name"
+            label="Название отделения"
             name="department_name"
             value={formData.department_name}
             onChange={handleChange}
@@ -88,7 +88,7 @@ const DepartmentForm: React.FC<DepartmentFormProps> = ({
       <DialogActions>
         <Button onClick={onClose}>Назад</Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          {department ? 'Update' : 'Create'}
+          {department ? 'Редактировать' : 'Создать'}
         </Button>
       </DialogActions>
     </Dialog>

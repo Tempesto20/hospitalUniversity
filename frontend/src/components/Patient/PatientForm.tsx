@@ -107,13 +107,13 @@ const PatientForm: React.FC<PatientFormProps> = ({
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
-        {patient ? 'Edit Patient' : 'Add New Patient'}
+        {patient ? 'Редактировать данные' : 'Добавить пациента'}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ marginTop: 2, display: 'grid', gap: 2, gridTemplateColumns: '1fr 1fr' }}>
           <TextField
             fullWidth
-            label="Full Name"
+            label="ФИО пациента"
             name="patient_full_name"
             value={formData.patient_full_name}
             onChange={handleChange}
@@ -124,7 +124,7 @@ const PatientForm: React.FC<PatientFormProps> = ({
 
           <TextField
             fullWidth
-            label="Birth Date"
+            label="Дата рождения"
             type="date"
             name="birth_date"
             value={formData.birth_date}
@@ -137,7 +137,7 @@ const PatientForm: React.FC<PatientFormProps> = ({
 
           <TextField
             fullWidth
-            label="Insurance Policy"
+            label="Полис"
             name="insurance_policy"
             value={formData.insurance_policy}
             onChange={handleChange}
@@ -148,7 +148,7 @@ const PatientForm: React.FC<PatientFormProps> = ({
 
           <TextField
             fullWidth
-            label="Passport"
+            label="Пасспорт"
             name="passport"
             value={formData.passport}
             onChange={handleChange}
@@ -159,7 +159,7 @@ const PatientForm: React.FC<PatientFormProps> = ({
 
           <TextField
             fullWidth
-            label="Admission Date"
+            label="Дата поступления"
             type="date"
             name="admission_date"
             value={formData.admission_date}
@@ -172,7 +172,7 @@ const PatientForm: React.FC<PatientFormProps> = ({
 
           <TextField
             fullWidth
-            label="Discharge Date"
+            label="Дата выписки"
             type="date"
             name="discharge_date"
             value={formData.discharge_date}
@@ -187,7 +187,7 @@ const PatientForm: React.FC<PatientFormProps> = ({
       <DialogActions>
         <Button onClick={onClose}>Назад</Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          {patient ? 'Update' : 'Create'}
+          {patient ? 'Редактировать' : 'Создать'}
         </Button>
       </DialogActions>
     </Dialog>

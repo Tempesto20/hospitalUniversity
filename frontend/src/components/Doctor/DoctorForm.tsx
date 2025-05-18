@@ -89,13 +89,13 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        {doctor ? 'Edit Doctor' : 'Add New Doctor'}
+        {doctor ? 'Редактировать данные' : 'Добавить врача'}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ marginTop: 2 }}>
           <TextField
             fullWidth
-            label="Full Name"
+            label="ФИО врача"
             name="full_name"
             value={formData.full_name}
             onChange={handleChange}
@@ -105,14 +105,14 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
           <TextField
             select
             fullWidth
-            label="Specialty"
+            label="Специальность"
             name="specialty_id"
             value={formData.specialty_id}
             onChange={handleChange}
             margin="normal"
           >
             <MenuItem value={0} disabled>
-              Select Specialty
+              Поиск специальности
             </MenuItem>
             {specialties.map(specialty => (
               <MenuItem key={specialty.id} value={specialty.id}>
@@ -125,7 +125,7 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
       <DialogActions>
         <Button onClick={onClose}>Назад</Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          {doctor ? 'Update' : 'Create'}
+          {doctor ? 'Редактировать' : 'Создать'}
         </Button>
       </DialogActions>
     </Dialog>

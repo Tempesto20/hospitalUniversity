@@ -69,13 +69,13 @@ const SpecialtyForm: React.FC<SpecialtyFormProps> = ({
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        {specialty ? 'Edit Specialty' : 'Add New Specialty'}
+        {specialty ? 'Редактировать спецальность' : 'Добавить специальность'}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ marginTop: 2 }}>
           <TextField
             fullWidth
-            label="Specialty Name"
+            label="Название специальности"
             name="specialty_name"
             value={formData.specialty_name}
             onChange={handleChange}
@@ -88,7 +88,7 @@ const SpecialtyForm: React.FC<SpecialtyFormProps> = ({
       <DialogActions>
         <Button onClick={onClose}>Назад</Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          {specialty ? 'Update' : 'Create'}
+          {specialty ? 'Редактировать' : 'Создать'}
         </Button>
       </DialogActions>
     </Dialog>

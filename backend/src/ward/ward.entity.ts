@@ -8,8 +8,8 @@ export class Ward {
   @PrimaryGeneratedColumn()
   ward_id: number;
 
-  @Column({ length: 10, unique: true })
-  ward_number: string;
+    @Column({ type: 'integer', unique: true })
+    ward_number: number; // Изменили тип с string на number
 
   @ManyToOne(() => Department, department => department.wards, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'department_id' })

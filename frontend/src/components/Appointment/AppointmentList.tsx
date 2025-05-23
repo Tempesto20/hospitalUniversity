@@ -28,7 +28,7 @@ const AppointmentList: React.FC = () => {
     const loadAppointments = async () => {
       try {
         const { data } = await fetchCombinehAppointments();
-        console.log('вывод данных ' + data);
+        // console.log('вывод данных ' + data);
         setAppointments(data);
         setLoading(false);
       } catch (err) {

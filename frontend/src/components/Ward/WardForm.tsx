@@ -31,7 +31,7 @@ const WardForm: React.FC<WardFormProps> = ({
   ward 
 }) => {
   const [formData, setFormData] = useState<WardFormData>({
-    ward_number: '',
+    ward_number: 0,
     department_name: '',
     doctor_name: ''
   });
@@ -73,7 +73,7 @@ const WardForm: React.FC<WardFormProps> = ({
       });
     } else {
       setFormData({
-        ward_number: '',
+        ward_number: 0,
         department_name: '',
         doctor_name: ''
       });

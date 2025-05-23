@@ -1,10 +1,9 @@
-import { IsInt, IsString, Length, IsOptional } from 'class-validator';
+import { IsInt, IsString, IsOptional } from 'class-validator';
 
 export class UpdateWardDto {
   @IsString()
-  @Length(1, 10)
   @IsOptional()
-  ward_number?: string;
+  ward_number?: number; // Изменено с string на number
 
   @IsInt()
   @IsOptional()

@@ -37,7 +37,7 @@ export interface PatientData {
   passport: string;
   admission_date: string;
   discharge_date: string | null;
-  ward_number?: string;
+  ward_number?: number;
   department_name?: string;
   doctor_full_name?: string;
   diagnos?: string;
@@ -55,7 +55,7 @@ export interface DepartmentData {
 
 export interface WardData {
   ward_id?: number;  // сделали необязательным
-  ward_number: string;
+  ward_number: number;
   department_name: string;
   doctor_full_name: string;
 }

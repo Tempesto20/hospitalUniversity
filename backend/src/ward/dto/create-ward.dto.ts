@@ -1,9 +1,9 @@
-import { IsInt, IsOptional, IsString, Length } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateWardDto {
-  @IsString()
-  @Length(1, 10)
-  ward_number: string;
+  @IsInt()
+  @IsNotEmpty()
+  ward_number: number; // Изменено с string на number
 
   @IsInt()
   department_id: number;

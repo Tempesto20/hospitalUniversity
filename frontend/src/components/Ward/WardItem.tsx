@@ -31,4 +31,6 @@ const WardItem: React.FC<WardItemProps> = ({
   );
 };
 
+
+
 export default WardItem;

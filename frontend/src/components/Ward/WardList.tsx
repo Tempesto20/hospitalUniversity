@@ -28,6 +28,7 @@ const WardList: React.FC = () => {
     const loadWards = async () => {
       try {
         const { data } = await fetchCombinehWards();
+        console.log(data);
         setWards(data);
         setLoading(false);
       } catch (err) {
@@ -118,14 +119,26 @@ const WardList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {wards.map(ward => (
+            {/* {wards.map(ward => (
               <WardItem 
                 key={ward.ward_id}
                 ward={ward}
                 onEdit={handleEditClick}
                 onDelete={handleDeleteClick}
               />
-            ))}
+            ))} */}
+
+          {wards.map((ward, index) => (
+            <WardItem 
+              key={ward.ward_id || index}
+              ward={ward}
+              onEdit={handleEditClick}
+              onDelete={handleDeleteClick}
+            />
+          ))}
+
+
+
           </TableBody>
         </Table>
       </TableContainer>

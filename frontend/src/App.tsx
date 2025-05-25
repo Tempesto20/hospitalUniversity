@@ -9,7 +9,9 @@ import DepartmentList from './components/Department/DepartmentList';
 import WardList from './components/Ward/WardList';
 import AppointmentList from './components/Appointment/AppointmentList';
 import NotFoundPage from './pages/NotFoundPage';
+import ReportList from './components/Reports/ReportList';
 // import PatientsListPage from './pages/PatientsListPage';
+
 
 const App: React.FC = () => {
   return (
@@ -23,7 +25,8 @@ const App: React.FC = () => {
           <Route path="/departments" element={<DepartmentList />} />
           <Route path="/wards" element={<WardList />} />
           <Route path="/appointments" element={<AppointmentList />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />      
+          <Route path="/reports" element={<ReportList />} />
           {/* <Route path="/patients" element={<PatientsListPage />} /> */}
         </Routes>
       </Layout>

@@ -23,24 +23,40 @@
 
 
 
-import { Controller, Get, Query, ParseIntPipe } from '@nestjs/common';
-import { WardsStayService } from './wards-stay.service';
-import { WardsStayReportDto } from './dto/wards-stay-report.dto';
+// import { Controller, Get, Query, ParseIntPipe } from '@nestjs/common';
+// import { WardsStayService } from './wards-stay.service';
+// import { WardsStayReportDto } from './dto/wards-stay-report.dto';
 
-@Controller('reports')
+// @Controller('reports')
+// export class WardsStayController {
+//   constructor(private readonly wardsStayService: WardsStayService) {}
+
+//   @Get('wards-stay')
+//   async getWardsWithPatients(
+//     @Query('max_days', new ParseIntPipe()) maxDays: number
+//   ): Promise<WardsStayReportDto[]> {
+//     return this.wardsStayService.getWardsWithPatients(maxDays);
+//   }
+// }
+
+
+import { Controller, Get, Query } from '@nestjs/common';
+import { WardsStayService } from './wards-stay.service';
+import { WardsStayDto } from './dto/wards-stay-report.dto';
+
+@Controller('wards-stay')
 export class WardsStayController {
   constructor(private readonly wardsStayService: WardsStayService) {}
 
-  @Get('wards-stay')
-  async getWardsWithPatients(
-    @Query('max_days', new ParseIntPipe()) maxDays: number
-  ): Promise<WardsStayReportDto[]> {
-    return this.wardsStayService.getWardsWithPatients(maxDays);
+  @Get()
+  async getPatientsWithWardsInfo(
+    @Query('maxDays') maxDays?: number,
+  ): Promise<WardsStayDto[]> {
+    return this.wardsStayService.getPatientsWithWardsInfo(
+      maxDays ? Number(maxDays) : undefined,
+    );
   }
 }
-
-
-
 
 
 

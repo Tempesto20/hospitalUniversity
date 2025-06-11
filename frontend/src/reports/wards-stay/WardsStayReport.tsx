@@ -1,856 +1,178 @@
 // import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 // import { 
-//   Box, Typography, TextField, Button, 
-//   Table, TableBody, TableCell, TableContainer, 
-//   TableHead, TableRow, Paper,
-//   IconButton, Tooltip, LinearProgress
+//   Box,
+//   Typography,
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableContainer,
+//   TableHead,
+//   TableRow,
+//   Paper,
+//   Button,
+//   TextField,
+//   Tooltip,
+//   IconButton,
+//   LinearProgress,
+//   CircularProgress
 // } from '@mui/material';
-// import { Refresh, ArrowBack } from '@mui/icons-material';
-// import axios from 'axios';
+// import { ArrowBack, Refresh } from '@mui/icons-material';
+// import { useNavigate } from 'react-router-dom';
 // import dayjs from 'dayjs';
+// import axios from 'axios';
 
-// // interface WardStayData {
-// //   patient_stay_days: number;
-// //   ward_number: string;
-// //   patient_names: string;
-// //   admission_date: string;
-// //   discharge_date: string;
-// // }
-
-
-// interface WardStayData {
-//   ward_number: string;
+// interface PatientWardInfo {
+//   ward_number: number;
 //   department_name: string;
+//   patient_name: string;
+//   admission_date: string;
+//   discharge_date: string | null;
+//   days_in_ward: number;
 //   doctor_name: string;
 //   specialty_name: string;
-//   max_stay_days: number;
-//   patient_count: number;
-//   patients: {
-//     name: string;
-//     admission_date: string;
-//     discharge_date: string;
-//     stay_days: number;
-//   }[];
+//   patient_id: number;
 // }
 
-
-// const WardsStayReport = () => {
-//   const [data, setData] = useState<WardStayData[]>([]);
-//   const [maxDays, setMaxDays] = useState('30');
+// const PatientsWardInfoReport = () => {
+//   const [data, setData] = useState<PatientWardInfo[]>([]);
+//   const [filteredData, setFilteredData] = useState<PatientWardInfo[]>([]);
+//   const [maxDays, setMaxDays] = useState<number | null>(null);
 //   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
 //   const navigate = useNavigate();
 
+//   const fetchData = async () => {
+//     setLoading(true);
+//     setError(null);
+//     try {
+//       const response = await axios.get(`http://localhost:3000/wards-stay`);
+//               console.log(response.data);
+//       if (Array.isArray(response.data)) {
+//         setData(response.data);
+//         // console.log(response.data);
+//         applyFilter(response.data, maxDays);
+//       } else {
+//         setData([]);
+//         setFilteredData([]);
+//       }
+//     } catch (err) {
+//       console.error('Error fetching patients ward info:', err);
+//       setError('Не удалось загрузить данные');
+//       setData([]);
+//       setFilteredData([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
+//   const applyFilter = (data: PatientWardInfo[], days: number | null) => {
+//     if (days === null) {
+//       setFilteredData(data);
+//     } else {
+//       const filtered = data.filter(patient => patient.days_in_ward <= days);
+//       setFilteredData(filtered);
+//     }
+//   };
 
-
-
-
-
-// //   const fetchData = async () => {
-// //     setLoading(true);
-// //     try {
-// //       const params = new URLSearchParams();
-// //       if (maxDays) params.append('max_days', maxDays);
-      
-// //       // const response = await axios.get(`http://localhost:3000/reports/wards-stay`);
-// // // console.log('Making request to:', `http://localhost:3000/reports/wards-stay`);
-
-
-// // //       const response = await axios.get(`http://localhost:3000/reports/wards-stay`, {
-// // //   params: { max_days: maxDays }
-// // // });
-
-
-// // // const response = await axios.get('http://localhost:3000/api/reports/wards-stay', {
-// // //   params: { max_days: 10 }
-// // // });
-
-
-// // const response = await axios.get(`http://localhost:3000/reports/wards-stay`, {
-// //   params: { max_days: maxDays }
-// // });
-
-// //       setData(response.data);
-// //       console.log(response.data)
-// //     } catch (error) {
-// //       console.error('Error fetching wards stay report:', error);
-// //     } finally {
-// //       setLoading(false);
-// //     }
-// //   };
-
-
-
-
-// // const fetchData = async () => {
-// //   try {
-// //     const response = await axios.get('http://localhost:3000/wards-stay');
-// //     console.log('Ответ сервера:', response.data); // Проверьте в консоли браузера
-// //     setData(response.data);
-// //   } catch (error) {
-// //     console.error('Ошибка запроса:');
-// //   }
-// // };
-
-
-
-
-
-
-
-// const fetchData = async () => {
-//   setLoading(true);
-//   try {
-//     const params = new URLSearchParams();
-//     params.append('max_days', maxDays);
-    
-//     const response = await axios.get(`http://localhost:3000/reports/wards-stay`, { params });
-//     const data = response.data;
-    
-//     const formattedData = data.map((item: { patients: any[]; }) => {
-//       return {
-//         ...item,
-//         patients: item.patients.map(patient => ({
-//           name: patient.full_name,
-//           admission_date: patient.admission_date,
-//           discharge_date: patient.discharge_date,
-//           stay_days: patient.stay_days,
-//         }))
-//       };
-//     });
-    
-//     setData(formattedData);
-//   } catch (error) {
-//     console.error('Error fetching wards stay report:', error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-//   // const fetchData = async () => {
-//   //   setLoading(true);
-//   //   try {
-//   //     const response = await axios.get(`http://localhost:3000/reports/wards-stay`, {
-//   //       params: { max_days: maxDays }
-//   //     });
-//   //     setData(response.data);
-//   //   } catch (error) {
-//   //     console.error('Error fetching wards stay report:', error);
-//   //   } finally {
-//   //     setLoading(false);
-//   //   }
-//   // };
-
-
+//   const handleMaxDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const value = e.target.value;
+//     if (value === '') {
+//       setMaxDays(null);
+//       applyFilter(data, null);
+//     } else {
+//       const numValue = parseInt(value);
+//       if (!isNaN(numValue)) {
+//         setMaxDays(numValue);
+//         applyFilter(data, numValue);
+//       }
+//     }
+//   };
 
 //   useEffect(() => {
 //     fetchData();
 //   }, []);
 
+//   const formatDate = (dateString: string | null) => {
+//     return dateString ? dayjs(dateString).format('DD.MM.YYYY') : 'Не выписан';
+//   };
 
-
-
-  
 //   return (
-    // <Box sx={{ p: 3 }}>
-    //   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-    //     <Tooltip title="Вернуться к списку отчетов">
-    //       <IconButton onClick={() => navigate('/reports')}>
-    //         <ArrowBack />
-    //       </IconButton>
-    //     </Tooltip>
-    //     <Typography variant="h4">Палаты по длительности пребывания</Typography>
-    //     <Tooltip title="Обновить данные">
-    //       <IconButton onClick={fetchData} color="primary">
-    //         <Refresh />
-    //       </IconButton>
-    //     </Tooltip>
-    //   </Box>
+//     <Box sx={{ p: 3 }}>
+//       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
+//         <Tooltip title="Вернуться к списку отчетов">
+//           <IconButton onClick={() => navigate('/reports')}>
+//             <ArrowBack />
+//           </IconButton>
+//         </Tooltip>
+//         <Typography variant="h4">Информация о пациентах в палатах</Typography>
+//         <Tooltip title="Обновить данные">
+//           <IconButton onClick={fetchData} color="primary">
+//             <Refresh />
+//           </IconButton>
+//         </Tooltip>
+//       </Box>
 
-    //   {loading && <LinearProgress sx={{ mb: 2 }} />}
+//       {loading && <LinearProgress sx={{ mb: 2 }} />}
+//       {error && (
+//         <Typography color="error" sx={{ mb: 2 }}>
+//           {error}
+//         </Typography>
+//       )}
 
-    //   <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-    //     <div style={{ flex: 1 }}>
-    //       <TextField
-    //         fullWidth
-    //         label="Максимальное количество дней"
-    //         type="number"
-    //         value={maxDays}
-    //         onChange={(e) => setMaxDays(e.target.value)}
-    //         size="small"
-    //         inputProps={{ min: 1 }}
-    //       />
-    //     </div>
-    //     <div style={{ flex: 1, maxWidth: '200px' }}>
-    //       <Button 
-    //         fullWidth 
-    //         variant="contained" 
-    //         onClick={fetchData}
-    //         sx={{ height: '40px' }}
-    //       >
-    //         Применить
-    //       </Button>
-    //     </div>
-    //   </div>
+//       <Box sx={{ display: 'flex', gap: 2, mb: 3, alignItems: 'center' }}>
+//         <TextField
+//           label="Максимальное количество дней"
+//           type="number"
+//           value={maxDays === null ? '' : maxDays}
+//           onChange={handleMaxDaysChange}
+//           size="small"
+//           inputProps={{ min: 1 }}
+//           sx={{ width: 250 }}
+//           placeholder="Все пациенты"
+//         />
+//         <Typography variant="body2" color="text.secondary">
+//           {filteredData.length} пациентов соответствуют критериям
+//         </Typography>
+//       </Box>
 
-//       {/* <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
+//       <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
 //         <Table stickyHeader>
 //           <TableHead>
 //             <TableRow>
 //               <TableCell>Номер палаты</TableCell>
-//               <TableCell>Пациент</TableCell>
+//               <TableCell>Отделение</TableCell>
+//               <TableCell>ФИО пациента</TableCell>
 //               <TableCell>Дата поступления</TableCell>
 //               <TableCell>Дата выписки</TableCell>
 //               <TableCell>Дней в палате</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {data.map((row, index) => (
-//               <TableRow key={index} hover>
-//                 <TableCell>{row.ward_number}</TableCell>
-//                 <TableCell>{row.patient_names}</TableCell>
-//                 <TableCell>{dayjs(row.admission_date).format('DD.MM.YYYY')}</TableCell>
-//                 <TableCell>{dayjs(row.discharge_date).format('DD.MM.YYYY')}</TableCell>
-//                 <TableCell>{row.patient_stay_days}</TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//         </Table>
-//       </TableContainer> */}
-
-
-// <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
-//         <Table stickyHeader>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>Номер палаты</TableCell>
-//               <TableCell>Отделение</TableCell>
-//               <TableCell>Врач</TableCell>
+//               <TableCell>ФИО врача</TableCell>
 //               <TableCell>Специализация</TableCell>
-//               <TableCell>Макс. дней</TableCell>
-//               <TableCell>Кол-во пациентов</TableCell>
-//               <TableCell>Пациенты</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {data.map((item, index) => (
-//               <TableRow key={index} hover>
-//                 <TableCell>{item.ward_number}</TableCell>
-//                 <TableCell>{item.department_name}</TableCell>
-//                 <TableCell>{item.doctor_name}</TableCell>
-//                 <TableCell>{item.specialty_name}</TableCell>
-//                 <TableCell>{item.max_stay_days}</TableCell>
-//                 <TableCell>{item.patient_count}</TableCell>
-//                 <TableCell>
-//                   {item.patients.map((patient, idx) => (
-//                     <React.Fragment key={idx}>
-//                       <Typography variant="body2">
-//                         {patient.name}
-//                       </Typography>
-//                       <Typography variant="caption">
-//                         Поступила: {dayjs(patient.admission_date).format('DD.MM.YYYY')}
-//                       </Typography>
-//                       <Typography variant="caption">
-//                         Выписана: {dayjs(patient.discharge_date).format('DD.MM.YYYY')}
-//                       </Typography>
-//                       <Typography variant="caption">
-//                         Дней в палате: {patient.stay_days}
-//                       </Typography>
-//                       <br />
-//                     </React.Fragment>
-//                   ))}
-//                 </TableCell>
-//                 </TableRow>
-//                 ))}
-//                 </TableBody>
-//                 </Table>
-//                 </TableContainer>
-
-
-
-//         {data.length === 0 && !loading && (
-//           <Typography sx={{ mt: 2, textAlign: 'center' }}>
-//             Нет данных для отображения
-//           </Typography>
-//         )}
-//         </Box>
-
-
-
-//   );
-// };
-
-// export default WardsStayReport;
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { Typography, Table, TableCell, TableContainer, Paper, Box, TableHead, TableRow, TableBody, Button, Tooltip, IconButton, LinearProgress, TextField } from '@mui/material';
-// import axios from 'axios';
-// import { ArrowBack, Refresh } from '@mui/icons-material';
-
-// interface WardStayData {
-//   // patient_names: string;
-//   ward_number: string;
-//   department_name: string;
-//   doctor_name: string;
-//   specialty_name: string;
-//   max_stay_days: number;
-//   patient_count: number;
-//   patients: {
-//     name: string;
-//     admission_date: string;
-//     discharge_date: string;
-//     stay_days: number;
-//   }[];
-// }
-
-// const WardsStayReport = () => {
-//   const [data, setData] = useState<WardStayData[]>([]);
-//   const [maxDays, setMaxDays] = useState('30');
-//   const [loading, setLoading] = useState(false);
-
-//   const fetchData = async () => {
-//     setLoading(true);
-//     try {
-//       const params = new URLSearchParams();
-//       params.append('max_days', maxDays);
-      
-//       const response = await axios.get(`http://localhost:3000/reports/wards-stay`, { params });
-//       const data = response.data;
-// console.log(data);
-//       // Проверка на null/undefined
-//       if (data) {
-//         setData(data);
-//       }
-//     } catch (error) {
-//       console.error('Error fetching wards stay report:', error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   function dayjs(admission_date: string) {
-//     throw new Error('Function not implemented.');
-//   }
-
-//   return (
-//     <Box sx={{ p: 3 }}>
-//       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-//         <Tooltip title="Вернуться к списку отчетов">
-//           <IconButton onClick={() => navigator('/reports')}>
-//             <ArrowBack />
-//           </IconButton>
-//         </Tooltip>
-//         <Typography variant="h4">Палаты по длительности пребывания</Typography>
-//         <Tooltip title="Обновить данные">
-//           <IconButton onClick={fetchData} color="primary">
-//             <Refresh />
-//           </IconButton>
-//         </Tooltip>
-//       </Box>
-
-//       {loading && <LinearProgress sx={{ mb: 2 }} />}
-
-//       <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-//         <div style={{ flex: 1 }}>
-//           <TextField
-//             fullWidth
-//             label="Максимальное количество дней"
-//             type="number"
-//             value={maxDays}
-//             onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setMaxDays(e.target.value)}
-//             size="small"
-//             inputProps={{ min: 1 }}
-//           />
-//         </div>
-//         <div style={{ flex: 1, maxWidth: '200px' }}>
-//           <Button 
-//             fullWidth 
-//             variant="contained" 
-//             onClick={fetchData}
-//             sx={{ height: '40px' }}
-//           >
-//             Применить
-//           </Button>
-//         </div>
-//       </div>
-
-
-//       <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
-//         <Table stickyHeader>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>Номер палаты</TableCell>
-//               <TableCell>Отделение</TableCell>
-//               <TableCell>Врач</TableCell>
-//               <TableCell>Специализация</TableCell>
-//               <TableCell>Макс. дней</TableCell>
-//               <TableCell>Пациенты</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {data.map((item, index) => (
-//               <TableRow key={index} hover>
-//                 <TableCell>{item.ward_number}</TableCell>
-//                 <TableCell>{item.department_name}</TableCell>
-//                 <TableCell>{item.doctor_name}</TableCell>
-//                 <TableCell>{item.specialty_name}</TableCell>
-//                 <TableCell>{item.max_stay_days}</TableCell>
-
-//                 <TableCell>
-//                   {item.patients?.map((patient, idx) => (
-//                     <React.Fragment key={idx}>
-//                       <Typography variant="body2">
-//                         {patient.name}
-//                       </Typography>
-//                       <Typography variant="caption">
-//                         Поступила: {dayjs(patient.admission_date).format('DD.MM.YYYY')}
-//                       </Typography>
-//                       <Typography variant="caption">
-//                         Выписана: {dayjs(patient.discharge_date).format('DD.MM.YYYY')}
-//                       </Typography>
-//                       <Typography variant="caption">
-//                         Дней в палате: {patient.stay_days}
-//                       </Typography>
-//                       <br />
-//                     </React.Fragment>
-//                   ))}
-//                 </TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-
-//       {data.length === 0 && !loading && (
-//         <Typography sx={{ mt: 2, textAlign: 'center' }}>
-//           Нет данных для отображения
-//         </Typography>
-//       )}
-//     </Box>
-//   );
-// };
-
-// export default WardsStayReport;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { 
-//   Box,
-//   Typography,
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableContainer,
-//   TableHead,
-//   TableRow,
-//   Paper,
-//   Button,
-//   TextField,
-//   Tooltip,
-//   IconButton,
-//   LinearProgress,
-//   CircularProgress
-// } from '@mui/material';
-// import { ArrowBack, Refresh } from '@mui/icons-material';
-// import { useNavigate } from 'react-router-dom';
-// import dayjs from 'dayjs';
-// import axios from 'axios';
-
-// interface PatientData {
-//   name: string;
-//   admission_date: string;
-//   discharge_date: string | null;
-//   stay_days: number;
-// }
-
-// interface WardStayData {
-//   ward_number: string;
-//   department_name: string;
-//   doctor_name: string;
-//   specialty_name: string;
-//   max_stay_days: number;
-//   patient_count: number;
-//   patients: PatientData[];
-// }
-
-// const WardsStayReport = () => {
-//   const [data, setData] = useState<WardStayData[]>([]);
-//   const [maxDays, setMaxDays] = useState('30');
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const navigate = useNavigate();
-
-//   // const fetchData = async () => {
-//   //   setLoading(true);
-//   //   setError(null);
-//   //   try {
-//   //     const response = await axios.get(`http://localhost:3000/reports/wards-stay`, {
-//   //       params: { max_days: maxDays }
-//   //     });
-//   //     setData(response.data || []);
-//   //   } catch (err) {
-//   //     console.error('Error fetching wards stay report:', err);
-//   //     setError('Не удалось загрузить данные');
-//   //     setData([]);
-//   //   } finally {
-//   //     setLoading(false);
-//   //   }
-//   // };
-
-//   const fetchData = async () => {
-//     setLoading(true);
-//     setError(null);
-//     try {
-//       const response = await axios.get(`http://localhost:3000/reports/wards-stay`, {
-//         params: { max_days: maxDays }
-
-//       });
-//       if (response.data) {
-//         setData(response.data);
-//       } else {
-//         setData([]);
-//       }
-//               console.log(response.data);
-//     } catch (err) {
-//       console.error('Error fetching wards stay report:', err);
-//       setError('Не удалось загрузить данные');
-//       setData([]);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   return (
-//     <Box sx={{ p: 3 }}>
-//       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-//         <Tooltip title="Вернуться к списку отчетов">
-//           <IconButton onClick={() => navigate('/reports')}>
-//             <ArrowBack />
-//           </IconButton>
-//         </Tooltip>
-//         <Typography variant="h4">Палаты по длительности пребывания</Typography>
-//         <Tooltip title="Обновить данные">
-//           <IconButton onClick={fetchData} color="primary">
-//             <Refresh />
-//           </IconButton>
-//         </Tooltip>
-//       </Box>
-
-//       {loading && <LinearProgress sx={{ mb: 2 }} />}
-//       {error && (
-//         <Typography color="error" sx={{ mb: 2 }}>
-//           {error}
-//         </Typography>
-//       )}
-
-//       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-//         <TextField
-//           fullWidth
-//           label="Максимальное количество дней"
-//           type="number"
-//           value={maxDays}
-//           onChange={(e) => setMaxDays(e.target.value)}
-//           size="small"
-//           inputProps={{ min: 1 }}
-//           sx={{ maxWidth: 400 }}
-//         />
-//         <Button 
-//           variant="contained" 
-//           onClick={fetchData}
-//           disabled={loading}
-//           sx={{ height: 40, width: 200 }}
-//         >
-//           Применить
-//         </Button>
-//       </Box>
-
-//       <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
-//         <Table stickyHeader>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>Номер палаты</TableCell>
-//               <TableCell>Отделение</TableCell>
-//               <TableCell>Врач</TableCell>
-//               <TableCell>Специализация</TableCell>
-//               <TableCell>Макс. дней</TableCell>
-//               <TableCell>Кол-во пациентов</TableCell>
-//               <TableCell>Пациенты</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {data.length > 0 ? (
-//               data.flatMap((ward, wardIdx) => 
-//                 (ward.patients || []).map((patient, patientIdx) => (
-//                   <TableRow key={`${wardIdx}-${patientIdx}`} hover>
-//                     <TableCell>{ward.ward_number}</TableCell>
-//                     <TableCell>{ward.department_name}</TableCell>
-//                     <TableCell>{ward.doctor_name}</TableCell>
-//                     <TableCell>{ward.specialty_name}</TableCell>
-//                     <TableCell>{ward.max_stay_days}</TableCell>
-//                     <TableCell>{ward.patient_count}</TableCell>
-//                     <TableCell>
-//                       <Typography variant="body2">{patient.name}</Typography>
-//                       <Typography variant="caption" display="block">
-//                         Поступил: {dayjs(patient.admission_date).format('DD.MM.YYYY')}
-//                       </Typography>
-//                       {patient.discharge_date && (
-//                         <Typography variant="caption" display="block">
-//                           Выписан: {dayjs(patient.discharge_date).format('DD.MM.YYYY')}
-//                         </Typography>
-//                       )}
-//                       <Typography variant="caption" display="block">
-//                         Дней в палате: {patient.stay_days}
-//                       </Typography>
-//                     </TableCell>
-//                   </TableRow>
-//                 ))
-//               )
-//             ) : (
-//               <TableRow>
-//                 <TableCell colSpan={7} align="center">
-//                   {loading ? 'Загрузка...' : 'Нет данных для отображения'}
-//                 </TableCell>
-//               </TableRow>
-//             )}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-//     </Box>
-//   );
-// };
-
-// export default WardsStayReport;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // отрабатывает
-// import React, { useState, useEffect } from 'react';
-// import { 
-//   Box,
-//   Typography,
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableContainer,
-//   TableHead,
-//   TableRow,
-//   Paper,
-//   Button,
-//   TextField,
-//   Tooltip,
-//   IconButton,
-//   LinearProgress,
-//   CircularProgress
-// } from '@mui/material';
-// import { ArrowBack, Refresh } from '@mui/icons-material';
-// import { useNavigate } from 'react-router-dom';
-// import dayjs from 'dayjs';
-// import axios from 'axios';
-
-// interface PatientData {
-//   name: string;
-//   admission_date: string;
-//   discharge_date: string | null;
-//   stay_days: number;
-// }
-
-// interface WardStayData {
-//   ward_number: string;
-//   department_name: string;
-//   doctor_name: string;
-//   specialty_name: string;
-//   max_stay_days: number;
-//   patient_count: number;
-//   patients: PatientData[];
-// }
-
-// const WardsStayReport = () => {
-//   const [data, setData] = useState<WardStayData[]>([]);
-//   const [maxDays, setMaxDays] = useState('30');
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const navigate = useNavigate();
-
-//   const fetchData = async () => {
-//     setLoading(true);
-//     setError(null);
-//     try {
-//       const response = await axios.get(`http://localhost:3000/reports/wards-stay`, {
-//         params: { max_days: maxDays }
-//       });
-//       if (Array.isArray(response.data)) {
-//         setData(response.data);
-//       } else {
-//         setData([]);
-//       }
-//       console.log('Received data:', response.data);
-//     } catch (err) {
-//       console.error('Error fetching wards stay report:', err);
-//       setError('Не удалось загрузить данные');
-//       setData([]);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const renderPatients = (patients: PatientData[]) => {
-//     if (!patients || patients.length === 0) {
-//       return <Typography variant="body2">Нет пациентов</Typography>;
-//     }
-    
-//     return patients.map((patient, index) => (
-//       <Box key={index} sx={{ mb: 2 }}>
-//         <Typography variant="body2">{patient.name}</Typography>
-//         <Typography variant="caption" display="block">
-//           Поступил: {dayjs(patient.admission_date).format('DD.MM.YYYY')}
-//         </Typography>
-//         {patient.discharge_date && (
-//           <Typography variant="caption" display="block">
-//             Выписан: {dayjs(patient.discharge_date).format('DD.MM.YYYY')}
-//           </Typography>
-//         )}
-//         <Typography variant="caption" display="block">
-//           Дней в палате: {patient.stay_days}
-//         </Typography>
-//       </Box>
-//     ));
-//   };
-
-//   return (
-//     <Box sx={{ p: 3 }}>
-//       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-//         <Tooltip title="Вернуться к списку отчетов">
-//           <IconButton onClick={() => navigate('/reports')}>
-//             <ArrowBack />
-//           </IconButton>
-//         </Tooltip>
-//         <Typography variant="h4">Палаты по длительности пребывания</Typography>
-//         <Tooltip title="Обновить данные">
-//           <IconButton onClick={fetchData} color="primary">
-//             <Refresh />
-//           </IconButton>
-//         </Tooltip>
-//       </Box>
-
-//       {loading && <LinearProgress sx={{ mb: 2 }} />}
-//       {error && (
-//         <Typography color="error" sx={{ mb: 2 }}>
-//           {error}
-//         </Typography>
-//       )}
-
-//       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-//         <TextField
-//           fullWidth
-//           label="Максимальное количество дней"
-//           type="number"
-//           value={maxDays}
-//           onChange={(e) => setMaxDays(e.target.value)}
-//           size="small"
-//           inputProps={{ min: 1 }}
-//           sx={{ maxWidth: 400 }}
-//         />
-//         <Button 
-//           variant="contained" 
-//           onClick={fetchData}
-//           disabled={loading}
-//           sx={{ height: 40, width: 200 }}
-//         >
-//           Применить
-//         </Button>
-//       </Box>
-
-//       <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
-//         <Table stickyHeader>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>Номер палаты</TableCell>
-//               <TableCell>Отделение</TableCell>
-//               <TableCell>Врач</TableCell>
-//               <TableCell>Специализация</TableCell>
-//               <TableCell>Макс. дней</TableCell>
-//               <TableCell>Кол-во пациентов</TableCell>
-//               <TableCell>Пациенты</TableCell>
 //             </TableRow>
 //           </TableHead>
 //           <TableBody>
 //             {loading ? (
 //               <TableRow>
-//                 <TableCell colSpan={7} align="center">
+//                 <TableCell colSpan={8} align="center">
 //                   <CircularProgress />
 //                 </TableCell>
 //               </TableRow>
-//             ) : data.length > 0 ? (
-//               data.map((ward, wardIdx) => (
-//                 <TableRow key={wardIdx} hover>
-//                   <TableCell>{ward.ward_number}</TableCell>
-//                   <TableCell>{ward.department_name}</TableCell>
-//                   <TableCell>{ward.doctor_name}</TableCell>
-//                   <TableCell>{ward.specialty_name}</TableCell>
-//                   <TableCell>{ward.max_stay_days}</TableCell>
-//                   <TableCell>{ward.patient_count}</TableCell>
-//                   <TableCell>
-//                     {renderPatients(ward.patients || [])}
-//                   </TableCell>
+//             ) : filteredData.length > 0 ? (
+//               filteredData.map((patient) => (
+//                 <TableRow key={patient.patient_id} hover>
+//                   <TableCell>{patient.ward_number}</TableCell>
+//                   <TableCell>{patient.department_name}</TableCell>
+//                   <TableCell>{patient.patient_name}</TableCell>
+//                   <TableCell>{formatDate(patient.admission_date)}</TableCell>
+//                   <TableCell>{formatDate(patient.discharge_date)}</TableCell>
+//                   <TableCell>{patient.days_in_ward}</TableCell>
+//                   <TableCell>{patient.doctor_name}</TableCell>
+//                   <TableCell>{patient.specialty_name}</TableCell>
 //                 </TableRow>
 //               ))
 //             ) : (
 //               <TableRow>
-//                 <TableCell colSpan={7} align="center">
-//                   Нет данных для отображения
+//                 <TableCell colSpan={8} align="center">
+//                   {data.length === 0 ? 'Нет данных для отображения' : 'Нет пациентов, соответствующих критериям'}
 //                 </TableCell>
 //               </TableRow>
 //             )}
@@ -861,7 +183,15 @@
 //   );
 // };
 
-// export default WardsStayReport;
+// export default PatientsWardInfoReport;
+
+
+
+
+
+
+
+
 
 
 
@@ -888,32 +218,28 @@ import {
   LinearProgress,
   CircularProgress
 } from '@mui/material';
-import { ArrowBack, Refresh } from '@mui/icons-material';
+import { ArrowBack, Refresh, Search } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
-interface PatientData {
-  names: string;
-  name: string;
+interface PatientWardInfo {
+  ward_number: number;
+  department_name: string;
+  patient_name: string;
   admission_date: string;
   discharge_date: string | null;
-  stay_days: number;
-}
-
-interface WardStayData {
-  ward_number: string;
-  department_name: string;
+  days_in_ward: number;
   doctor_name: string;
   specialty_name: string;
-  max_stay_days: number;
-  patient_count: number;
-  patients: PatientData[];
+  patient_id: number;
 }
 
-const WardsStayReport = () => {
-  const [data, setData] = useState<WardStayData[]>([]);
-  const [maxDays, setMaxDays] = useState('30');
+const PatientsWardInfoReport = () => {
+  const [data, setData] = useState<PatientWardInfo[]>([]);
+  const [filteredData, setFilteredData] = useState<PatientWardInfo[]>([]);
+  const [inputDays, setInputDays] = useState<string>('');
+  const [appliedDays, setAppliedDays] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -922,21 +248,48 @@ const WardsStayReport = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`http://localhost:3000/reports/wards-stay`, {
-        params: { max_days: maxDays }
-      });
+      const response = await axios.get(`http://localhost:3000/wards-stay`);
+      console.log(response.data);
       if (Array.isArray(response.data)) {
         setData(response.data);
+        applyFilter(response.data, appliedDays);
       } else {
         setData([]);
+        setFilteredData([]);
       }
-      console.log('Received data:', response.data);
     } catch (err) {
-      console.error('Error fetching wards stay report:', err);
+      console.error('Error fetching patients ward info:', err);
       setError('Не удалось загрузить данные');
       setData([]);
+      setFilteredData([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const applyFilter = (data: PatientWardInfo[], days: number | null) => {
+    if (days === null) {
+      setFilteredData(data);
+    } else {
+      const filtered = data.filter(patient => patient.days_in_ward <= days);
+      setFilteredData(filtered);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputDays(e.target.value);
+  };
+
+  const handleSearchClick = () => {
+    if (inputDays === '') {
+      setAppliedDays(null);
+      applyFilter(data, null);
+    } else {
+      const numValue = parseInt(inputDays);
+      if (!isNaN(numValue) && numValue > 0) {
+        setAppliedDays(numValue);
+        applyFilter(data, numValue);
+      }
     }
   };
 
@@ -956,7 +309,7 @@ const WardsStayReport = () => {
             <ArrowBack />
           </IconButton>
         </Tooltip>
-        <Typography variant="h4">Палаты по длительности пребывания</Typography>
+        <Typography variant="h4">Информация о пациентах в палатах</Typography>
         <Tooltip title="Обновить данные">
           <IconButton onClick={fetchData} color="primary">
             <Refresh />
@@ -971,25 +324,28 @@ const WardsStayReport = () => {
         </Typography>
       )}
 
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, alignItems: 'center' }}>
         <TextField
-          fullWidth
           label="Максимальное количество дней"
           type="number"
-          value={maxDays}
-          onChange={(e) => setMaxDays(e.target.value)}
+          value={inputDays}
+          onChange={handleInputChange}
           size="small"
           inputProps={{ min: 1 }}
-          sx={{ maxWidth: 400 }}
+          sx={{ width: 250 }}
+          placeholder="Все пациенты"
         />
-        <Button 
-          variant="contained" 
-          onClick={fetchData}
+        <Button
+          variant="contained"
+          startIcon={<Search />}
+          onClick={handleSearchClick}
           disabled={loading}
-          sx={{ height: 40, width: 200 }}
         >
-          Применить
+          Поиск
         </Button>
+        <Typography variant="body2" color="text.secondary">
+          {filteredData.length} пациентов соответствуют критериям
+        </Typography>
       </Box>
 
       <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
@@ -998,54 +354,38 @@ const WardsStayReport = () => {
             <TableRow>
               <TableCell>Номер палаты</TableCell>
               <TableCell>Отделение</TableCell>
-              <TableCell>Врач</TableCell>
-              <TableCell>Специализация</TableCell>
-              <TableCell>Макс. дней</TableCell>
-              <TableCell>Кол-во пациентов</TableCell>
               <TableCell>ФИО пациента</TableCell>
               <TableCell>Дата поступления</TableCell>
               <TableCell>Дата выписки</TableCell>
               <TableCell>Дней в палате</TableCell>
+              <TableCell>ФИО врача</TableCell>
+              <TableCell>Специализация</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={10} align="center">
+                <TableCell colSpan={8} align="center">
                   <CircularProgress />
                 </TableCell>
               </TableRow>
-            ) : data.length > 0 ? (
-              data.flatMap(ward => 
-                ward.patients?.map((patient, index) => (
-                  <TableRow key={`${ward.ward_number}-${index}`} hover>
-                    <TableCell>{ward.ward_number}</TableCell>
-                    <TableCell>{ward.department_name}</TableCell>
-                    <TableCell>{ward.doctor_name}</TableCell>
-                    <TableCell>{ward.specialty_name}</TableCell>
-                    <TableCell>{ward.max_stay_days}</TableCell>
-                    <TableCell>{ward.patient_count}</TableCell>
-                    <TableCell>{patient.names}</TableCell>
-                    <TableCell>{formatDate(patient.admission_date)}</TableCell>
-                    <TableCell>{formatDate(patient.discharge_date)}</TableCell>
-                    <TableCell>{patient.stay_days}</TableCell>
-                  </TableRow>
-                )) ?? (
-                  <TableRow key={ward.ward_number} hover>
-                    <TableCell>{ward.ward_number}</TableCell>
-                    <TableCell>{ward.department_name}</TableCell>
-                    <TableCell>{ward.doctor_name}</TableCell>
-                    <TableCell>{ward.specialty_name}</TableCell>
-                    <TableCell>{ward.max_stay_days}</TableCell>
-                    <TableCell>{ward.patient_count}</TableCell>
-                    <TableCell colSpan={4} align="center">Нет данных о пациентах</TableCell>
-                  </TableRow>
-                )
-              )
+            ) : filteredData.length > 0 ? (
+              filteredData.map((patient) => (
+                <TableRow key={patient.patient_id} hover>
+                  <TableCell>{patient.ward_number}</TableCell>
+                  <TableCell>{patient.department_name}</TableCell>
+                  <TableCell>{patient.patient_name}</TableCell>
+                  <TableCell>{formatDate(patient.admission_date)}</TableCell>
+                  <TableCell>{formatDate(patient.discharge_date)}</TableCell>
+                  <TableCell>{patient.days_in_ward}</TableCell>
+                  <TableCell>{patient.doctor_name}</TableCell>
+                  <TableCell>{patient.specialty_name}</TableCell>
+                </TableRow>
+              ))
             ) : (
               <TableRow>
-                <TableCell colSpan={10} align="center">
-                  Нет данных для отображения
+                <TableCell colSpan={8} align="center">
+                  {data.length === 0 ? 'Нет данных для отображения' : 'Нет пациентов, соответствующих критериям'}
                 </TableCell>
               </TableRow>
             )}
@@ -1056,4 +396,4 @@ const WardsStayReport = () => {
   );
 };
 
-export default WardsStayReport;
+export default PatientsWardInfoReport;

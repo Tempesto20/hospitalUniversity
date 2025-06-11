@@ -21,7 +21,7 @@ const PatientsListPage = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/appointments/with-appointments');
+        const response = await axios.get('/appointments/with-appointments');
         console.log(response.data); 
         setPatients(response.data);
         setLoading(false);

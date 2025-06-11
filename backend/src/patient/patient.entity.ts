@@ -26,4 +26,5 @@ export class Patient {
 
   @OneToMany(() => Appointment, appointment => appointment.patient)
   appointments: Appointment[];
+    hospitalizations: any;
 }

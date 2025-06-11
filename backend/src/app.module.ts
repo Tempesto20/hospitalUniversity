@@ -6,6 +6,7 @@ import { PatientModule } from './patient/patient.module';
 import { DepartmentModule } from './department/department.module';
 import { WardModule } from './ward/ward.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { WardsStayModule } from './reports/wards-stay/wards-stay.module';
 
 @Module({
   imports: [
@@ -20,12 +21,15 @@ import { AppointmentModule } from './appointment/appointment.module';
       synchronize: true,
       logging: true,
     }),
+
+    // добавляем модули на бэке, чтобы была возможность подключиться по api
     SpecialtyModule,
     DoctorModule,
     PatientModule,
     DepartmentModule,
     WardModule,
     AppointmentModule,
+    WardsStayModule
   ],
 })
 export class AppModule {}

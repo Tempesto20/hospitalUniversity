@@ -9,9 +9,12 @@ import DepartmentList from './components/Department/DepartmentList';
 import WardList from './components/Ward/WardList';
 import AppointmentList from './components/Appointment/AppointmentList';
 import NotFoundPage from './pages/NotFoundPage';
-import ReportList from './components/Reports/ReportList';
+import ReportsPage from './reports/ReportsPage';
+import ComplaintsReport from './reports/complaints/ComplaintsReport';
+import TopPatientsReport from './reports/top-patients/TopPatientsReport';
+import WardsStayReport from './reports/wards-stay/WardsStayReport';
+// import ReportList from './components/Reports/ReportList';
 // import PatientsListPage from './pages/PatientsListPage';
-
 
 const App: React.FC = () => {
   return (
@@ -19,15 +22,18 @@ const App: React.FC = () => {
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<NotFoundPage />} />    
           <Route path="/specialties" element={<SpecialtyList />} />
           <Route path="/doctors" element={<DoctorList />} />
           <Route path="/patients" element={<PatientList />} />
           <Route path="/departments" element={<DepartmentList />} />
           <Route path="/wards" element={<WardList />} />
-          <Route path="/appointments" element={<AppointmentList />} />
-          <Route path="*" element={<NotFoundPage />} />      
-          <Route path="/reports" element={<ReportList />} />
-          {/* <Route path="/patients" element={<PatientsListPage />} /> */}
+          <Route path="/appointments" element={<AppointmentList />} />  
+          
+          <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/reports/complaints" element={<ComplaintsReport />} />
+          <Route path="/reports/top-patients" element={<TopPatientsReport />} />
+          <Route path="/reports/wards-stay" element={<WardsStayReport />} />
         </Routes>
       </Layout>
     </Router>

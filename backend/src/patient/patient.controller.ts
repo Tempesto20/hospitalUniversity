@@ -45,3 +45,6 @@ export class PatientController {
     return this.patientService.delete(id);
   }
 }
+
+
+//  const response = await axios.get(`http://localhost:3000/reports/wards-stay?${params.toString()}`);

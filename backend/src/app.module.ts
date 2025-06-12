@@ -7,6 +7,7 @@ import { DepartmentModule } from './department/department.module';
 import { WardModule } from './ward/ward.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { WardsStayModule } from './reports/wards-stay/wards-stay.module';
+import { TopPatientsModule } from './reports/top-patients/top-patients.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { WardsStayModule } from './reports/wards-stay/wards-stay.module';
     DepartmentModule,
     WardModule,
     AppointmentModule,
-    WardsStayModule
+    WardsStayModule,
+    TopPatientsModule
   ],
 })
 export class AppModule {}

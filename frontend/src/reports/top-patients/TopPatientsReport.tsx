@@ -1,62 +1,94 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
-  Box, Typography, Button, 
-  Table, TableBody, TableCell, TableContainer, 
-  TableHead, TableRow, Paper,
-  IconButton, Tooltip, LinearProgress, 
-  FormControl, InputLabel, Select, MenuItem
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TextField,
+  Tooltip,
+  IconButton,
+  LinearProgress,
+  CircularProgress,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel
 } from '@mui/material';
-import { Refresh, ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Refresh } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
-interface TopPatientData {
+interface TopPatient {
+  patient_id: number;
   patient_name: string;
-  visit_count: number;
-  specialty_name: string;
+  birth_date: string;
+  insurance_policy: string;
+  appointment_count: number;
 }
 
 const TopPatientsReport = () => {
-  const [data, setData] = useState<TopPatientData[]>([]);
+  const [patients, setPatients] = useState<TopPatient[]>([]);
   const [specialties, setSpecialties] = useState<string[]>([]);
-  const [selectedSpecialty, setSelectedSpecialty] = useState('');
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchSpecialties = async () => {
     try {
-      const params = new URLSearchParams();
-      if (selectedSpecialty) params.append('specialty', selectedSpecialty);
-      
-      const response = await axios.get(`http://localhost:3000/reports/top-patients?${params.toString()}`);
-      setData(response.data);
-    } catch (error) {
-      console.error('Error fetching top patients report:', error);
+      const response = await axios.get('http://localhost:3000/top-patients/specialties');
+      setSpecialties(response.data);
+      console.log(response.data);
+    } catch (err) {
+      console.error('Error fetching specialties:', err);
+      setError('Не удалось загрузить список специальностей');
+    }
+  };
+
+  const fetchTopPatients = async () => {
+    if (!selectedSpecialty) return;
+    
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`http://localhost:3000/top-patients?specialty=${selectedSpecialty}`);
+      setPatients(response.data);
+      console.log(response.data);
+    } catch (err) {
+      console.error('Error fetching top patients:', err);
+      setError('Не удалось загрузить данные о пациентах');
+      setPatients([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchSpecialties = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/reports/top-patients/specialties');
-      setSpecialties(response.data);
-    } catch (error) {
-      console.error('Error fetching specialties:', error);
-    }
-  };
-
   useEffect(() => {
     fetchSpecialties();
-    fetchData();
   }, []);
 
   useEffect(() => {
     if (selectedSpecialty) {
-      fetchData();
+      fetchTopPatients();
+    } else {
+      setPatients([]);
     }
   }, [selectedSpecialty]);
+
+  const handleSpecialtyChange = (event: any) => {
+    setSelectedSpecialty(event.target.value);
+  };
+
+  const formatDate = (dateString: string) => {
+    return dayjs(dateString).format('DD.MM.YYYY');
+  };
 
   return (
     <Box sx={{ p: 3 }}>
@@ -68,62 +100,106 @@ const TopPatientsReport = () => {
         </Tooltip>
         <Typography variant="h4">Топ пациентов по специальностям</Typography>
         <Tooltip title="Обновить данные">
-          <IconButton onClick={fetchData} color="primary">
+          <IconButton onClick={fetchTopPatients} color="primary" disabled={!selectedSpecialty || loading}>
             <Refresh />
           </IconButton>
         </Tooltip>
       </Box>
 
       {loading && <LinearProgress sx={{ mb: 2 }} />}
+      {error && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {error}
+        </Typography>
+      )}
 
-      <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-        <div style={{ flex: 1 }}>
-          <FormControl fullWidth size="small">
-            <InputLabel>Специальность</InputLabel>
-            <Select
-              value={selectedSpecialty}
-              onChange={(e) => setSelectedSpecialty(e.target.value as string)}
-              label="Специальность"
-            >
-              <MenuItem value="">Все специальности</MenuItem>
-              {specialties.map((spec) => (
-                <MenuItem key={spec} value={spec}>
-                  {spec}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-      </div>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, alignItems: 'center' }}>
+        <FormControl sx={{ minWidth: 250 }} size="small">
+          <InputLabel id="specialty-select-label">Специальность</InputLabel>
+          <Select
+            labelId="specialty-select-label"
+            value={selectedSpecialty}
+            label="Специальность"
+            onChange={handleSpecialtyChange}
+            disabled={loading}
+          >
+            <MenuItem value="">
+              <em>Выберите специальность</em>
+            </MenuItem>
+            {specialties.map((specialty) => (
+              <MenuItem key={specialty} value={specialty}>
+                {specialty}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Typography variant="body2" color="text.secondary">
+          {patients.length} пациентов в топе
+        </Typography>
+      </Box>
 
       <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Пациент</TableCell>
+              <TableCell>№</TableCell>
+              <TableCell>ФИО пациента</TableCell>
+              <TableCell>Дата рождения</TableCell>
+              <TableCell>Страховой полис</TableCell>
               <TableCell>Количество посещений</TableCell>
-              <TableCell>Специальность</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, index) => (
-              <TableRow key={index} hover>
-                <TableCell>{row.patient_name}</TableCell>
-                <TableCell>{row.visit_count}</TableCell>
-                <TableCell>{row.specialty_name}</TableCell>
+            {loading && !selectedSpecialty ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  <CircularProgress />
+                </TableCell>
               </TableRow>
-            ))}
+            ) : patients.length > 0 ? (
+              patients.map((patient, index) => (
+                <TableRow key={patient.patient_id} hover>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{patient.patient_name}</TableCell>
+                  <TableCell>{formatDate(patient.birth_date)}</TableCell>
+                  <TableCell>{patient.insurance_policy}</TableCell>
+                  <TableCell>{patient.appointment_count}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  {selectedSpecialty 
+                    ? 'Нет данных для выбранной специальности' 
+                    : 'Выберите специальность для просмотра топа пациентов'}
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
-
-      {data.length === 0 && !loading && (
-        <Typography sx={{ mt: 2, textAlign: 'center' }}>
-          Нет данных для отображения
-        </Typography>
-      )}
     </Box>
   );
 };
 
 export default TopPatientsReport;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

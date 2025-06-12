@@ -29,7 +29,6 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMan
 import { Department } from '../department/department.entity';
 import { Doctor } from '../doctor/doctor.entity';
 import { Appointment } from '../appointment/appointment.entity';
-import { Hospitalization } from '../hospitalization/hospitalization.entity';
 
 @Entity()
 export class Ward {
@@ -50,6 +49,4 @@ export class Ward {
   @OneToMany(() => Appointment, appointment => appointment.ward)
   appointments: Appointment[];
 
-  @OneToMany(() => Hospitalization, hospitalization => hospitalization.ward)
-  hospitalizations: Hospitalization[];
 }

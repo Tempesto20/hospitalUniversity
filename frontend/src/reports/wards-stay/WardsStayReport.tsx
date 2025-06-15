@@ -16,7 +16,7 @@ import {
   LinearProgress,
   CircularProgress
 } from '@mui/material';
-import { ArrowBack, Refresh, Search } from '@mui/icons-material';
+import { ArrowBack, Refresh, Search, Clear } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -33,7 +33,7 @@ interface PatientWardInfo {
   patient_id: number;
 }
 
-const PatientsWardInfoReport = () => {
+const WardsStayReport = () => {
   const [data, setData] = useState<PatientWardInfo[]>([]);
   const [filteredData, setFilteredData] = useState<PatientWardInfo[]>([]);
   const [inputDays, setInputDays] = useState<string>('');
@@ -91,6 +91,12 @@ const PatientsWardInfoReport = () => {
     }
   };
 
+  const handleClearClick = () => {
+    setInputDays('');
+    setAppliedDays(null);
+    applyFilter(data, null);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -132,6 +138,17 @@ const PatientsWardInfoReport = () => {
           inputProps={{ min: 1 }}
           sx={{ width: 250 }}
           placeholder="Все пациенты"
+          InputProps={{
+            endAdornment: inputDays && (
+              <IconButton
+                size="small"
+                onClick={() => setInputDays('')}
+                edge="end"
+              >
+                <Clear fontSize="small" />
+              </IconButton>
+            )
+          }}
         />
         <Button
           variant="contained"
@@ -140,6 +157,14 @@ const PatientsWardInfoReport = () => {
           disabled={loading}
         >
           Поиск
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<Clear />}
+          onClick={handleClearClick}
+          disabled={loading || (!inputDays && appliedDays === null)}
+        >
+          Очистить
         </Button>
         <Typography variant="body2" color="text.secondary">
           {filteredData.length} пациентов соответствуют критериям
@@ -194,4 +219,4 @@ const PatientsWardInfoReport = () => {
   );
 };
 
-export default PatientsWardInfoReport;
+export default WardsStayReport;

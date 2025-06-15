@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Box,
   Typography,
@@ -10,7 +10,6 @@ import {
   TableRow,
   Paper,
   Button,
-  TextField,
   Tooltip,
   IconButton,
   LinearProgress,
@@ -20,7 +19,7 @@ import {
   FormControl,
   InputLabel
 } from '@mui/material';
-import { ArrowBack, Refresh } from '@mui/icons-material';
+import { ArrowBack, Refresh, Clear } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -68,6 +67,11 @@ const TopPatientsReport = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClearClick = () => {
+    setSelectedSpecialty('');
+    setPatients([]);
   };
 
   useEffect(() => {
@@ -134,6 +138,15 @@ const TopPatientsReport = () => {
           </Select>
         </FormControl>
 
+        <Button
+          variant="outlined"
+          startIcon={<Clear />}
+          onClick={handleClearClick}
+          disabled={!selectedSpecialty || loading}
+        >
+          Очистить
+        </Button>
+
         <Typography variant="body2" color="text.secondary">
           {patients.length} пациентов в топе
         </Typography>
@@ -184,22 +197,3 @@ const TopPatientsReport = () => {
 };
 
 export default TopPatientsReport;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

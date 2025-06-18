@@ -64,6 +64,8 @@ const ComplaintsReport = () => {
     fetchData(keyword);
   };
 
+
+  
   const handleClearClick = () => {
     setKeyword('');
     fetchData('');

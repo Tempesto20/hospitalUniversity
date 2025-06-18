@@ -7,7 +7,7 @@ import DoctorList from './components/Doctor/DoctorList';
 import PatientList from './components/Patient/PatientList';
 import DepartmentList from './components/Department/DepartmentList';
 import WardList from './components/Ward/WardList';
-import AppointmentList from './components/Appointment/Appointment';
+import AppointmentList from './components/Appointment/AppointmentList';
 import NotFoundPage from './pages/NotFoundPage';
 import ReportsPage from './reports/ReportsPage';
 import ComplaintsReport from './reports/complaints/ComplaintsReport';

@@ -5,87 +5,87 @@ import {
   DialogActions, Box, Typography 
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import WardForm from './WardForm';
-import WardItem from './WardItem';
-import { WardData } from '../../api/types';
+import AppointmentForm from './AppointmentForm';
+import AppointmentItem from './AppointmentItem';
+import { AppointmentData } from '../../api/types';
 import { 
-  fetchCombinehWards, 
-  createWard, 
-  updateWard, 
-  deleteWard 
+  fetchCombinehAppointments, 
+  createAppointment, 
+  updateAppointment, 
+  deleteAppointment 
 } from '../../api/api';
 
-const WardList: React.FC = () => {
-  const [wards, setWards] = useState<WardData[]>([]);
+const AppointmentList: React.FC = () => {
+  const [appointments, setAppointments] = useState<AppointmentData[]>([]);
   const [openForm, setOpenForm] = useState(false);
-  const [currentWard, setCurrentWard] = useState<WardData | null>(null);
+  const [currentAppointment, setCurrentAppointment] = useState<AppointmentData | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [wardToDelete, setWardToDelete] = useState<number | null>(null);
+  const [appointmentToDelete, setAppointmentToDelete] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadWards = async () => {
+    const loadAppointments = async () => {
       try {
-        const { data } = await fetchCombinehWards();
-        console.log(data);
-        setWards(data);
+        const { data } = await fetchCombinehAppointments();
+        // console.log('вывод данных ' + data);
+        setAppointments(data);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch wards');
+        setError('Failed to fetch appointments');
         setLoading(false);
         console.error(err);
       }
     };
 
-    loadWards();
+    loadAppointments();
   }, []);
 
   const handleAddClick = () => {
-    setCurrentWard(null);
+    setCurrentAppointment(null);
     setOpenForm(true);
   };
 
-  const handleEditClick = (ward: WardData) => {
-    setCurrentWard(ward);
+  const handleEditClick = (appointment: AppointmentData) => {
+    setCurrentAppointment(appointment);
     setOpenForm(true);
   };
 
   const handleDeleteClick = (id: number) => {
-    setWardToDelete(id);
+    setAppointmentToDelete(id);
     setOpenDeleteDialog(true);
   };
 
   const handleDeleteConfirm = async () => {
-    if (wardToDelete) {
+    if (appointmentToDelete) {
       try {
-        await deleteWard(wardToDelete);
-        setWards(wards.filter(w => w.ward_id !== wardToDelete));
+        await deleteAppointment(appointmentToDelete);
+        setAppointments(appointments.filter(a => a.appointment_id !== appointmentToDelete));
         setOpenDeleteDialog(false);
       } catch (err) {
-        setError('Failed to delete ward');
+        setError('Failed to delete appointment');
         console.error(err);
       }
     }
   };
 
-  const handleFormSubmit = async (ward: WardData) => {
+  const handleFormSubmit = async (appointment: AppointmentData) => {
     try {
-      if (currentWard?.ward_id) {
-        const { data: updatedWard } = await updateWard(
-          currentWard.ward_id, 
-          ward
+      if (currentAppointment?.appointment_id) {
+        const { data: updatedAppointment } = await updateAppointment(
+          currentAppointment.appointment_id, 
+          appointment
         );
-        setWards(wards.map(w => 
-          w.ward_id === currentWard.ward_id ? updatedWard : w
+        setAppointments(appointments.map(a => 
+          a.appointment_id === currentAppointment.appointment_id ? updatedAppointment : a
         ));
       } else {
-        const { data: newWard } = await createWard(ward);
-        setWards([...wards, newWard]);
+        const { data: newAppointment } = await createAppointment(appointment);
+        setAppointments([...appointments, newAppointment]);
       }
       setOpenForm(false);
     } catch (err) {
-      setError('Failed to save ward');
+      setError('Failed to save appointment');
       console.error(err);
     }
   };
@@ -96,14 +96,14 @@ const WardList: React.FC = () => {
   return (
     <Box sx={{ padding: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-        <Typography variant="h4">Палаты</Typography>
+        <Typography variant="h4">Приемы</Typography>
         <Button 
           variant="contained" 
           color="primary" 
           startIcon={<Add />}
           onClick={handleAddClick}
         >
-          Добавить палату
+          Добавить прием
         </Button>
       </Box>
 
@@ -111,43 +111,37 @@ const WardList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              
+              <TableCell>Номер приема</TableCell>
+              <TableCell>Пациен</TableCell>
               <TableCell>Номер палаты</TableCell>
               <TableCell>Отделение</TableCell>
-              <TableCell>Врач</TableCell>
+              <TableCell>Дата приема</TableCell>
+              <TableCell>Доктор</TableCell>
+              <TableCell>Сиптомы</TableCell>
+              <TableCell>Диагноз</TableCell>
+              <TableCell>Аллергия</TableCell>
+              <TableCell>Препараты</TableCell>
               <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {wards.map(ward => (
-              <WardItem 
-                key={ward.ward_id}
-                ward={ward}
+            {appointments.map(appointment => (
+              <AppointmentItem 
+                key={appointment.appointment_id}
+                appointment={appointment}
                 onEdit={handleEditClick}
                 onDelete={handleDeleteClick}
               />
-            ))} */}
-
-          {wards.map((ward, index) => (
-            <WardItem 
-              key={ward.ward_id || index}
-              ward={ward}
-              onEdit={handleEditClick}
-              onDelete={handleDeleteClick}
-            />
-          ))}
-
-
-
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      <WardForm
+      <AppointmentForm
         open={openForm}
         onClose={() => setOpenForm(false)}
         onSubmit={handleFormSubmit}
-        ward={currentWard}
+        appointment={currentAppointment}
       />
 
       <Dialog
@@ -156,7 +150,7 @@ const WardList: React.FC = () => {
       >
         <DialogTitle>Подтвердите удаление</DialogTitle>
         <DialogContent>
-          Вы уверены, что хотите удалить палату?
+          Вы действительно хотите удалить прием?
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDeleteDialog(false)}>Назад</Button>
@@ -167,4 +161,4 @@ const WardList: React.FC = () => {
   );
 };
 
-export default WardList;
+export default AppointmentList;

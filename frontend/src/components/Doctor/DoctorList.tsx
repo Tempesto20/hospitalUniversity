@@ -1,184 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Box,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-  IconButton
+import { 
+  Table, TableBody, TableCell, TableContainer, TableHead, 
+  TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, 
+  DialogActions, Box, Typography 
 } from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
+import DoctorForm from './DoctorForm';
+import DoctorItem from './DoctorItem';
 import { DoctorData } from '../../api/types';
 import { 
-  fetchCombineDoctors,
-  createDoctor,
-  updateDoctor,
-  deleteDoctor,
-  fetchSpecialties
+  fetchCombineDoctors, 
+  createDoctor, 
+  updateDoctor, 
+  deleteDoctor 
 } from '../../api/api';
 
-// DoctorForm component
-interface DoctorFormProps {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (doctor: DoctorData) => void;
-  doctor: DoctorData | null;
-}
-
-interface FormData {
-  full_name: string;
-  specialty_id: number;
-}
-
-const DoctorForm: React.FC<DoctorFormProps> = ({ 
-  open, 
-  onClose, 
-  onSubmit, 
-  doctor 
-}) => {
-  const [formData, setFormData] = useState<FormData>({
-    full_name: '',
-    specialty_id: 0
-  });
-  const [specialties, setSpecialties] = useState<{id: number, name: string}[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadSpecialties = async () => {
-      try {
-        const { data } = await fetchSpecialties();
-        setSpecialties(data.map((s: any) => ({ id: s.specialty_id, name: s.specialty_name })));
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setLoading(false);
-      }
-    };
-
-    loadSpecialties();
-  }, []);
-
-  useEffect(() => {
-    if (doctor) {
-      setFormData({
-        full_name: doctor.full_name,
-        specialty_id: doctor.specialty_id
-      });
-    } else {
-      setFormData({
-        full_name: '',
-        specialty_id: 0
-      });
-    }
-  }, [doctor]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'specialty_id' ? Number(value) : value
-    }));
-  };
-
-  const handleSubmit = () => {
-    const selectedSpecialty = specialties.find(s => s.id === formData.specialty_id);
-    
-    onSubmit({
-      ...(doctor?.doctor_id ? { doctor_id: doctor.doctor_id } : {}),
-      ...formData,
-      specialty_name: selectedSpecialty?.name || ''
-    });
-  };
-
-  if (loading) return null;
-
-  return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>
-        {doctor ? 'Редактировать данные' : 'Добавить врача'}
-      </DialogTitle>
-      <DialogContent>
-        <Box sx={{ marginTop: 2 }}>
-          <TextField
-            fullWidth
-            label="ФИО врача"
-            name="full_name"
-            value={formData.full_name}
-            onChange={handleChange}
-            margin="normal"
-          />
-
-          <TextField
-            select
-            fullWidth
-            label="Специальность"
-            name="specialty_id"
-            value={formData.specialty_id}
-            onChange={handleChange}
-            margin="normal"
-          >
-            <MenuItem value={0} disabled>
-              Поиск специальности
-            </MenuItem>
-            {specialties.map(specialty => (
-              <MenuItem key={specialty.id} value={specialty.id}>
-                {specialty.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Назад</Button>
-        <Button onClick={handleSubmit} color="primary" variant="contained">
-          {doctor ? 'Редактировать' : 'Создать'}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-// DoctorItem component
-interface DoctorItemProps {
-  doctor: DoctorData;
-  onEdit: (doctor: DoctorData) => void;
-  onDelete: (id: number) => void;
-}
-
-const DoctorItem: React.FC<DoctorItemProps> = ({ 
-  doctor, 
-  onEdit, 
-  onDelete 
-}) => {
-  return (
-    <TableRow>
-      <TableCell>{doctor.doctor_id}</TableCell>
-      <TableCell>{doctor.full_name}</TableCell>
-      <TableCell>{doctor.specialty_name || 'No specialty'}</TableCell>
-      <TableCell>   
-        <IconButton onClick={() => onEdit(doctor)}>
-          <Edit />
-        </IconButton>
-        <IconButton onClick={() => onDelete(doctor.doctor_id!)}>
-          <Delete />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-// DoctorList component
 const DoctorList: React.FC = () => {
   const [doctors, setDoctors] = useState<DoctorData[]>([]);
   const [openForm, setOpenForm] = useState(false);
@@ -188,6 +24,8 @@ const DoctorList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+
+// ------------------------------------------------------------------------
   useEffect(() => {
     const loadDoctors = async () => {
       try {
@@ -203,7 +41,7 @@ const DoctorList: React.FC = () => {
 
     loadDoctors();
   }, []);
-
+// ------------------------------------------------------------------------
   const handleAddClick = () => {
     setCurrentDoctor(null);
     setOpenForm(true);
@@ -286,8 +124,7 @@ const DoctorList: React.FC = () => {
                 key={doctor.doctor_id}
                 doctor={doctor}
                 onEdit={handleEditClick}
-                onDelete={handleDeleteClick}
-              />
+                onDelete={handleDeleteClick}              />
             ))}
           </TableBody>
         </Table>

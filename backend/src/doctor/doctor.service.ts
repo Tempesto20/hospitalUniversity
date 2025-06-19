@@ -5,6 +5,7 @@ import { Doctor } from './doctor.entity';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { Ward } from 'src/ward/ward.entity';
+import { Specialty } from 'src/specialty/specialty.entity';
 
 @Injectable()
 export class DoctorService {
@@ -49,10 +50,37 @@ export class DoctorService {
 
 
   
-  async update(id: number, updateDoctorDto: UpdateDoctorDto): Promise<Doctor> {
-    await this.doctorRepository.update(id, updateDoctorDto);
-    return this.findOne(id);
+  // async update(id: number, updateDoctorDto: UpdateDoctorDto): Promise<Doctor> {
+  //   await this.doctorRepository.update(id, updateDoctorDto);
+  //   return this.findOne(id);
+  // }
+
+
+
+async update(id: number, updateDoctorDto: UpdateDoctorDto): Promise<Doctor> {
+  const doctor = await this.findOne(id);
+  
+  if (updateDoctorDto.full_name !== undefined) {
+    doctor.full_name = updateDoctorDto.full_name;
   }
+
+  // Handle specialty update
+  if (updateDoctorDto.specialty_id !== undefined) {
+    if (updateDoctorDto.specialty_id === null) {
+      doctor.specialty = null;
+    } else {
+      doctor.specialty = { specialty_id: updateDoctorDto.specialty_id } as Specialty;
+    }
+  }
+
+  await this.doctorRepository.save(doctor);
+  return this.findOne(id);
+}
+
+
+
+
+
 
   async delete(id: number): Promise<{ message: string }> {
     const doctor = await this.findOne(id);

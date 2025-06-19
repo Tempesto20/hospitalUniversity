@@ -3,30 +3,22 @@ export interface SpecialtyData {
   specialty_name: string;
 }
 
+// export interface DoctorData {
+//   specialty_name?: string; // делаем необязательным, так как оно может приходить с сервера
+//   doctor_id?: number;
+//   full_name: string;
+//   specialty_id: number;
+// }
+
+
 export interface DoctorData {
-  specialty_name?: string; // делаем необязательным, так как оно может приходить с сервера
   doctor_id?: number;
   full_name: string;
-  specialty_id: number;
+  specialty_id: number | null;  // Allow null
+  specialty_name?: string;
 }
 
-// export interface PatientData {
-//   preparation: string;
-//   allergy: string;
-//   symptom: string;
-//   diagnos: string;
-//   doctor_full_name: string;
-//   department_name: string;
-//   ward_number: string;
-//   patient_full_name: string;
-//   patient_id?: number;
-//   full_name: string;
-//   birth_date: string;
-//   insurance_policy: string;
-//   passport: string;
-//   admission_date: string;
-//   discharge_date?: string | number | Date | undefined | any;
-// }
+
 
 
 export interface PatientData {

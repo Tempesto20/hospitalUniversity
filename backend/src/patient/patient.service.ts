@@ -29,11 +29,27 @@ export class PatientService {
     return patient;
   }
 
-  async create(createPatientDto: CreatePatientDto): Promise<Patient> {
-    const patient = this.patientRepository.create(createPatientDto);
-    const savedPatient = await this.patientRepository.save(patient);
-    return this.findOne(savedPatient.patient_id);
-  }
+  // async create(createPatientDto: CreatePatientDto): Promise<Patient> {
+  //   const patient = this.patientRepository.create(createPatientDto);
+  //   const savedPatient = await this.patientRepository.save(patient);
+  //   return this.findOne(savedPatient.patient_id);
+  // }
+
+async create(createPatientDto: CreatePatientDto): Promise<Patient> {
+  // Create the patient entity first
+  const patient = this.patientRepository.create({
+    full_name: createPatientDto.full_name,
+    insurance_policy: createPatientDto.insurance_policy,
+    passport: createPatientDto.passport,
+    birth_date: new Date(createPatientDto.birth_date),
+    admission_date: new Date(createPatientDto.admission_date),
+    discharge_date: createPatientDto.discharge_date 
+      ? new Date(createPatientDto.discharge_date) 
+      : undefined // Use undefined instead of null
+  });
+  
+  return this.patientRepository.save(patient);
+}
 
   async update(id: number, updatePatientDto: UpdatePatientDto): Promise<Patient> {
     await this.patientRepository.update(id, updatePatientDto);

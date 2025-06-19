@@ -5,37 +5,6 @@ export interface SpecialtyData {
 
 
 
-// export interface DoctorData {
-//   doctor_id?: number;
-//   full_name: string;
-//   specialty_id: number | null;  // Allow null
-//   specialty_name?: string;
-// }
-
-
-
-
-// export interface DoctorData {
-//   doctor_id?: number;
-//   full_name: string;
-//   specialty_id: number | null;
-//   specialty?: {
-//     specialty_id: number;
-//     specialty_name: string;
-//   } | null;
-// }
-
-// export interface DoctorData {
-//   doctor_id?: number;
-//   full_name: string;
-//   specialty_id: number | null;
-//   specialty?: {
-//     specialty_id: number;
-//     specialty_name: string;
-//   } | null;
-// }
-
-
 
 export interface DoctorData {
   doctor_id?: number;
@@ -80,21 +49,7 @@ export interface WardData {
   doctor_full_name: string;
 }
 
-// export interface AppointmentData {
-//   doctor_full_name?: string;
-//   department_name?: string;
-//   ward_number?: number;
-//   patient_full_name?: string;
-//   appointment_id: number;
-//   patient_id: number;
-//   doctor_id: number;
-//   ward_id?: number;
-//   appointment_date: string;
-//   symptom?: string;
-//   diagnos?: string;
-//   allergy?: string;
-//   preparation?: string;
-// }
+
 
 
 export interface AppointmentData {

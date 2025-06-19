@@ -28,14 +28,48 @@ export const fetchCombineDoctors = () => api.get('/doctors/with-specialties');
 // Patient API
 export const fetchPatients = () => api.get('/patients');
 export const fetchPatient = (id: number) => api.get(`/patients/${id}`);
-export const createPatient = (patient: PatientData) => api.post('/patients', patient);
-export const updatePatient = (id: number, patient: PatientData) => api.put(`/patients/${id}`, patient);
+// export const createPatient = (patient: PatientData) => api.post('/patients', patient);
+// export const updatePatient = (id: number, patient: PatientData) => api.put(`/patients/${id}`, patient);
 export const deletePatient = (id: number) => api.delete(`/patients/${id}`);
 
 
 // ------------------------------------------------------------------------
 export const fetchCombinePatients = () => api.get('/patients/with-combines');
 // ------------------------------------------------------------------------
+
+
+export const createPatient = (patient: PatientData) => {
+  const payload = {
+    full_name: patient.patient_full_name,
+    birth_date: patient.birth_date, // Should be in ISO format (YYYY-MM-DD)
+    insurance_policy: patient.insurance_policy,
+    passport: patient.passport,
+    admission_date: patient.admission_date,
+    discharge_date: patient.discharge_date || undefined
+  };
+  return api.post('/patients', payload);
+};
+
+export const updatePatient = (id: number, patient: PatientData) => {
+  const transformedData = {
+    full_name: patient.patient_full_name,
+    birth_date: new Date(patient.birth_date),
+    insurance_policy: patient.insurance_policy,
+    passport: patient.passport,
+    admission_date: new Date(patient.admission_date),
+    discharge_date: patient.discharge_date ? new Date(patient.discharge_date) : null
+  };
+  return api.put(`/patients/${id}`, transformedData);
+};
+
+
+api.interceptors.request.use(config => {
+  console.log('Request Payload:', config.data);
+  return config;
+});
+
+
+
 
 
 // Department API

@@ -18,7 +18,8 @@ const DoctorItem: React.FC<DoctorItemProps> = ({
     <TableRow>
       <TableCell>{doctor.doctor_id}</TableCell>
       <TableCell>{doctor.full_name}</TableCell>
-      <TableCell>{doctor.specialty_name || 'No specialty'}</TableCell>
+      {/* <TableCell>{doctor.specialty_name || 'No specialty'}</TableCell> */}
+      <TableCell>{doctor.specialty ? doctor.specialty.specialty_name : 'Не указана'}</TableCell>
       <TableCell>   
         <IconButton onClick={() => onEdit(doctor)}>
           <Edit />

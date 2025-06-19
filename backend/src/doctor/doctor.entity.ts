@@ -11,12 +11,13 @@ export class Doctor {
   @Column({ length: 255 })
   full_name: string;
 
-  @ManyToOne(() => Specialty, specialty => specialty.doctors, { 
-    onDelete: 'SET NULL',
-    nullable: true
-  })
-  @JoinColumn({ name: 'specialty_id' })
-  specialty: Specialty | null;
+@ManyToOne(() => Specialty, specialty => specialty.doctors, { 
+  onDelete: 'SET NULL',
+  nullable: true,
+  eager: true // Добавляем eager loading для автоматической загрузки связи
+})
+@JoinColumn({ name: 'specialty_id' })
+specialty: Specialty | null;
 
   @OneToMany(() => Ward, ward => ward.doctor)
   wards: Ward[];

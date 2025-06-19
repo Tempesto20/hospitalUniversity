@@ -70,26 +70,31 @@ const DoctorList: React.FC = () => {
     }
   };
 
-  const handleFormSubmit = async (doctor: DoctorData) => {
-    try {
-      if (currentDoctor?.doctor_id) {
-        const { data: updatedDoctor } = await updateDoctor(
-          currentDoctor.doctor_id, 
-          doctor
-        );
-        setDoctors(doctors.map(d => 
-          d.doctor_id === currentDoctor.doctor_id ? updatedDoctor : d
-        ));
-      } else {
-        const { data: newDoctor } = await createDoctor(doctor);
-        setDoctors([...doctors, newDoctor]);
-      }
-      setOpenForm(false);
-    } catch (err) {
-      setError('Failed to save doctor');
-      console.error(err);
+const handleFormSubmit = async (doctor: DoctorData) => {
+  try {
+    const doctorPayload = {
+      full_name: doctor.full_name,
+      specialty_id: doctor.specialty_id
+    };
+
+    if (currentDoctor?.doctor_id) {
+      const { data: updatedDoctor } = await updateDoctor(
+        currentDoctor.doctor_id, 
+        doctorPayload
+      );
+      setDoctors(doctors.map(d => 
+        d.doctor_id === currentDoctor.doctor_id ? updatedDoctor : d
+      ));
+    } else {
+      const { data: newDoctor } = await createDoctor(doctorPayload);
+      setDoctors([...doctors, newDoctor]);
     }
-  };
+    setOpenForm(false);
+  } catch (err) {
+    setError('Failed to save doctor');
+    console.error(err);
+  }
+};
 
   if (loading) return <Typography>Загрузка...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;

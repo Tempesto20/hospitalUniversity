@@ -49,14 +49,6 @@ export class DoctorService {
 
 
 
-  
-  // async update(id: number, updateDoctorDto: UpdateDoctorDto): Promise<Doctor> {
-  //   await this.doctorRepository.update(id, updateDoctorDto);
-  //   return this.findOne(id);
-  // }
-
-
-
 async update(id: number, updateDoctorDto: UpdateDoctorDto): Promise<Doctor> {
   const doctor = await this.findOne(id);
   
@@ -76,9 +68,6 @@ async update(id: number, updateDoctorDto: UpdateDoctorDto): Promise<Doctor> {
   await this.doctorRepository.save(doctor);
   return this.findOne(id);
 }
-
-
-
 
 
 

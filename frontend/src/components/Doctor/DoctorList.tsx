@@ -90,6 +90,10 @@ const handleFormSubmit = async (doctor: DoctorData) => {
       setDoctors([...doctors, newDoctor]);
     }
     setOpenForm(false);
+    
+    // Обновляем список врачей после изменения
+    const { data } = await fetchCombineDoctors();
+    setDoctors(data);
   } catch (err) {
     setError('Failed to save doctor');
     console.error(err);

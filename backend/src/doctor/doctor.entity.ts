@@ -14,7 +14,7 @@ export class Doctor {
 @ManyToOne(() => Specialty, specialty => specialty.doctors, { 
   onDelete: 'SET NULL',
   nullable: true,
-  eager: true // Добавляем eager loading для автоматической загрузки связи
+  eager: true // Для автоматической загрузки связи
 })
 @JoinColumn({ name: 'specialty_id' })
 specialty: Specialty | null;

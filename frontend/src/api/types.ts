@@ -25,17 +25,28 @@ export interface SpecialtyData {
 //   } | null;
 // }
 
+// export interface DoctorData {
+//   doctor_id?: number;
+//   full_name: string;
+//   specialty_id: number | null;
+//   specialty?: {
+//     specialty_id: number;
+//     specialty_name: string;
+//   } | null;
+// }
+
+
+
 export interface DoctorData {
   doctor_id?: number;
   full_name: string;
-  specialty_id: number | null;
+  specialty_id?: number | null;
   specialty?: {
     specialty_id: number;
     specialty_name: string;
   } | null;
+  specialty_name?: string; // для обратной совместимости
 }
-
-
 
 
 export interface PatientData {

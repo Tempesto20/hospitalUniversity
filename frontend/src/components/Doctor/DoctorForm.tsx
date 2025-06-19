@@ -75,20 +75,10 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
   };
 
 const handleSubmit = () => {
-  const specialty_id = formData.specialty_id !== null ? 
-    Number(formData.specialty_id) : 
-    null;
-  
-  const specialty = formData.specialty_id !== null ? {
-    specialty_id: formData.specialty_id,
-    specialty_name: specialties.find(s => s.id === formData.specialty_id)?.name || ''
-  } : null;
-
   onSubmit({
     ...(doctor?.doctor_id ? { doctor_id: doctor.doctor_id } : {}),
     full_name: formData.full_name,
-    specialty_id: specialty_id,
-    specialty: specialty
+    specialty_id: formData.specialty_id
   });
 };
 

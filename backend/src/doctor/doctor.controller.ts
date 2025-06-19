@@ -24,10 +24,20 @@ export class DoctorController {
     return this.doctorService.findOne(id);
   }
 
-  @Post()
-  async create(@Body() createDoctorDto: CreateDoctorDto): Promise<Doctor> {
-    return this.doctorService.create(createDoctorDto);
-  }
+  // @Post()
+  // async create(@Body() createDoctorDto: CreateDoctorDto): Promise<Doctor> {
+  //   return this.doctorService.create(createDoctorDto);
+  // }
+
+  
+@Post()
+async create(@Body() createDoctorDto: CreateDoctorDto): Promise<Doctor> {
+  console.log('Creating doctor with data:', createDoctorDto);
+  const doctor = await this.doctorService.create(createDoctorDto);
+  console.log('Created doctor:', doctor);
+  return doctor;
+}
+
 
   @Put(':id')
   async update(

@@ -1,9 +1,9 @@
-import { IsInt, IsString, IsOptional } from 'class-validator';
+import { IsInt, IsOptional } from 'class-validator';
 
 export class UpdateWardDto {
-  @IsString()
+  @IsInt()
   @IsOptional()
-  ward_number?: number; // Изменено с string на number
+  ward_number?: number;
 
   @IsInt()
   @IsOptional()
@@ -11,5 +11,5 @@ export class UpdateWardDto {
 
   @IsInt()
   @IsOptional()
-  doctor_id?: number;
+  doctor_id?: number | null;
 }

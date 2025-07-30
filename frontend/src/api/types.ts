@@ -18,23 +18,6 @@ export interface DoctorData {
 }
 
 
-// export interface PatientData {
-//   patient_id: number;
-//   patient_full_name: string;
-//   birth_date: string;
-//   insurance_policy: string;
-//   passport: string;
-//   admission_date: string;
-//   discharge_date: string | null;
-//   ward_number?: number;
-//   department_name?: string;
-//   doctor_full_name?: string;
-//   diagnos?: string;
-//   symptom?: string;
-//   allergy?: string;
-//   preparation?: string;
-// }
-
 
 export interface PatientData {
   patient_id?: number;
@@ -63,13 +46,34 @@ export interface DepartmentData {
   department_name: string;
 }
 
+// export interface WardData {
+//   ward_id?: number;  // сделали необязательным
+//   ward_number: number;
+//   department_name: string;
+//   doctor_full_name: string;
+// }
+
+
 export interface WardData {
-  ward_id?: number;  // сделали необязательным
+  ward_id?: number;
   ward_number: number;
+  department_id: number; // Убираем optional, так как это обязательное поле
   department_name: string;
-  doctor_full_name: string;
+  doctor_id?: number | null;
+  doctor_full_name?: string;
+  patient_count?: number;
 }
 
+
+
+// export interface WardData {
+//   ward_id?: number;
+//   ward_number: number;
+//   department_id: number;
+//   department_name: string;
+//   doctor_id: number | null;
+//   doctor_full_name?: string;
+// }
 
 
 

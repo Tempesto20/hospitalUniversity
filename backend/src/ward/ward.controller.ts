@@ -15,10 +15,17 @@ export class WardController {
   }
 
   // ------------------------------------------------------------------------
-  @Get('/with-wards')
-  async findAllWithSpecialties() {
-    return this.wardService.findAllWithWards();
-  }
+  // @Get('/with-wards')
+  // async findAllWithSpecialties() {
+  //   return this.wardService.findAllWithWards();
+  // }
+
+  @Get('/with-combines')
+async findAllWithCombines() {
+  return this.wardService.findAllWithCombines();
+}
+
+
 // ------------------------------------------------------------------------
 
   @Get(':id')

@@ -110,15 +110,62 @@ export const createDepartment = (department: DepartmentData) => api.post('/depar
 export const updateDepartment = (id: number, department: DepartmentData) => api.put(`/departments/${id}`, department);
 export const deleteDepartment = (id: number) => api.delete(`/departments/${id}`);
 
+
+
+
 // Ward API
 export const fetchWards = () => api.get('/wards');
 export const fetchWard = (id: number) => api.get(`/wards/${id}`);
-export const createWard = (ward: WardData) => api.post('/wards', ward);
-export const updateWard = (id: number, ward: WardData) => api.put(`/wards/${id}`, ward);
+// export const createWard = (ward: WardData) => api.post('/wards', ward);
+// export const updateWard = (id: number, ward: WardData) => api.put(`/wards/${id}`, ward);
 export const deleteWard = (id: number) => api.delete(`/wards/${id}`);
 
+
+export const fetchCombinehWards = () => api.get('/wards/with-combines');
+
+// export const createWard = (ward: {
+//   ward_number: number | string;
+//   department_id: number | string;
+//   doctor_id?: number | string | null;
+// }) => {
+//   return api.post('/wards', {
+//     ward_number: String(ward.ward_number),
+//     department_id: String(ward.department_id),
+//     doctor_id: ward.doctor_id ? String(ward.doctor_id) : null
+//   });
+// };
+
+
+export const createWard = (ward: {
+  ward_number: number;
+  department_id: number;
+  doctor_id?: number | null;
+}) => {
+  return api.post('/wards', {
+    ward_number: ward.ward_number,
+    department_id: ward.department_id,
+    doctor_id: ward.doctor_id !== undefined ? ward.doctor_id : null
+  });
+};
+
+
+
+export const updateWard = (id: number, ward: {
+  ward_number?: number;
+  department_id?: number;
+  doctor_id?: number | null;
+}) => {
+  return api.put(`/wards/${id}`, {
+    ward_number: Number(ward.ward_number),
+    department_id: Number(ward.department_id),
+    doctor_id: ward.doctor_id ? Number(ward.doctor_id) : null
+  });
+};
+
+
+
 // ------------------------------------------------------------------------
-export const fetchCombinehWards = () => api.get('/wards/with-wards');
+// export const fetchCombinehWards = () => api.get('/wards/with-wards');
 // ------------------------------------------------------------------------
 
 // Appointment API

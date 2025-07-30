@@ -2,18 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, 
-  DialogActions, Box, Typography 
+  DialogActions, Box, Typography, Snackbar, Alert
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import WardForm from './WardForm';
 import WardItem from './WardItem';
 import { WardData } from '../../api/types';
-import { 
-  fetchCombinehWards, 
-  createWard, 
-  updateWard, 
-  deleteWard 
-} from '../../api/api';
+import { fetchCombinehWards, createWard, updateWard, deleteWard } from '../../api/api';
 
 const WardList: React.FC = () => {
   const [wards, setWards] = useState<WardData[]>([]);
@@ -23,21 +18,22 @@ const WardList: React.FC = () => {
   const [wardToDelete, setWardToDelete] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const loadWards = async () => {
+    try {
+      setLoading(true);
+      const { data } = await fetchCombinehWards();
+      setWards(data);
+      setLoading(false);
+    } catch (err) {
+      setError('Ошибка загрузки палат');
+      setLoading(false);
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    const loadWards = async () => {
-      try {
-        const { data } = await fetchCombinehWards();
-        console.log(data);
-        setWards(data);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch wards');
-        setLoading(false);
-        console.error(err);
-      }
-    };
-
     loadWards();
   }, []);
 
@@ -60,42 +56,55 @@ const WardList: React.FC = () => {
     if (wardToDelete) {
       try {
         await deleteWard(wardToDelete);
-        setWards(wards.filter(w => w.ward_id !== wardToDelete));
+        await loadWards();
         setOpenDeleteDialog(false);
+        setSuccessMessage('Палата успешно удалена');
       } catch (err) {
-        setError('Failed to delete ward');
+        setError('Ошибка удаления палаты');
         console.error(err);
       }
     }
   };
 
-  const handleFormSubmit = async (ward: WardData) => {
-    try {
-      if (currentWard?.ward_id) {
-        const { data: updatedWard } = await updateWard(
-          currentWard.ward_id, 
-          ward
-        );
-        setWards(wards.map(w => 
-          w.ward_id === currentWard.ward_id ? updatedWard : w
-        ));
-      } else {
-        const { data: newWard } = await createWard(ward);
-        setWards([...wards, newWard]);
-      }
-      setOpenForm(false);
-    } catch (err) {
-      setError('Failed to save ward');
-      console.error(err);
+const handleFormSubmit = async (ward: WardData) => {
+  try {
+    if (currentWard?.ward_id) {
+      await updateWard(currentWard.ward_id, {
+        ward_number: ward.ward_number,
+        department_id: ward.department_id,
+        doctor_id: ward.doctor_id
+      });
+      setSuccessMessage('Палата успешно обновлена');
+    } else {
+      await createWard({
+        ward_number: ward.ward_number,
+        department_id: ward.department_id,
+        doctor_id: ward.doctor_id
+      });
+      setSuccessMessage('Палата успешно создана');
     }
+    setOpenForm(false);
+    await loadWards();
+  } catch (err: unknown) {
+    let errorMessage = 'Ошибка сохранения палаты';
+    if (err instanceof Error) {
+      errorMessage += ': ' + (err as any).response?.data?.message || err.message;
+    }
+    setError(errorMessage);
+    console.error(err);
+  }
+};
+
+  const handleCloseSnackbar = () => {
+    setError(null);
+    setSuccessMessage(null);
   };
 
   if (loading) return <Typography>Загрузка...</Typography>;
-  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h4">Палаты</Typography>
         <Button 
           variant="contained" 
@@ -107,38 +116,26 @@ const WardList: React.FC = () => {
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              
-              <TableCell>Номер палаты</TableCell>
+              <TableCell>Номер</TableCell>
               <TableCell>Отделение</TableCell>
               <TableCell>Врач</TableCell>
+              <TableCell>Пациенты</TableCell>
               <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {wards.map(ward => (
+            {wards.map(ward => (
               <WardItem 
-                key={ward.ward_id}
+                key={ward.ward_id || ward.ward_number}
                 ward={ward}
                 onEdit={handleEditClick}
                 onDelete={handleDeleteClick}
               />
-            ))} */}
-
-          {wards.map((ward, index) => (
-            <WardItem 
-              key={ward.ward_id || index}
-              ward={ward}
-              onEdit={handleEditClick}
-              onDelete={handleDeleteClick}
-            />
-          ))}
-
-
-
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -159,10 +156,32 @@ const WardList: React.FC = () => {
           Вы уверены, что хотите удалить палату?
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Назад</Button>
-          <Button onClick={handleDeleteConfirm} color="error">Удалить</Button>
+          <Button onClick={() => setOpenDeleteDialog(false)}>Отмена</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Удалить
+          </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error" onClose={handleCloseSnackbar}>
+          {error}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="success" onClose={handleCloseSnackbar}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

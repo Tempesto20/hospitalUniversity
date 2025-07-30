@@ -38,35 +38,66 @@ export const fetchCombinePatients = () => api.get('/patients/with-combines');
 // ------------------------------------------------------------------------
 
 
-export const createPatient = (patient: PatientData) => {
+
+// работает создание
+
+export const createPatient = (patient: Omit<PatientData, 'patient_id'>) => {
+  return api.post('/patients', patient);
+};
+
+export const updatePatient = (id: number, patient: Partial<PatientData>) => {
   const payload = {
-    full_name: patient.patient_full_name,
-    birth_date: patient.birth_date, // Should be in ISO format (YYYY-MM-DD)
+    full_name: patient.full_name,
+    birth_date: patient.birth_date,
     insurance_policy: patient.insurance_policy,
     passport: patient.passport,
     admission_date: patient.admission_date,
-    discharge_date: patient.discharge_date || undefined
+    discharge_date: patient.discharge_date || null,
+    doctor_id: patient.doctor_id || null,
+    ward_number: patient.ward_number || null,
+    diagnos: patient.diagnos || '',
+    symptom: patient.symptom || '',
+    allergy: patient.allergy || '',
+    preparation: patient.preparation || ''
   };
-  return api.post('/patients', payload);
+  return api.put(`/patients/${id}`, payload);
 };
 
-export const updatePatient = (id: number, patient: PatientData) => {
-  const transformedData = {
-    full_name: patient.patient_full_name,
-    birth_date: new Date(patient.birth_date),
-    insurance_policy: patient.insurance_policy,
-    passport: patient.passport,
-    admission_date: new Date(patient.admission_date),
-    discharge_date: patient.discharge_date ? new Date(patient.discharge_date) : null
-  };
-  return api.put(`/patients/${id}`, transformedData);
-};
 
 
 api.interceptors.request.use(config => {
-  console.log('Request Payload:', config.data);
+  console.log('Request:', config.method?.toUpperCase(), config.url);
+  console.log('Request Data:', config.data);
   return config;
 });
+
+api.interceptors.response.use(
+  response => {
+    console.log('Response:', response.status, response.data);
+    return response;
+  },
+  error => {
+    console.error('Error:', error.response?.status, error.response?.data);
+    return Promise.reject(error);
+  }
+);
+
+
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 400) {
+      console.error('Validation errors:', error.response.data);
+      // Можно добавить обработку конкретных ошибок валидации
+    }
+    return Promise.reject(error);
+  }
+);
+
+
+
+
+
 
 
 

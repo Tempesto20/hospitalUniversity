@@ -51,10 +51,45 @@ async create(createPatientDto: CreatePatientDto): Promise<Patient> {
   return this.patientRepository.save(patient);
 }
 
-  async update(id: number, updatePatientDto: UpdatePatientDto): Promise<Patient> {
-    await this.patientRepository.update(id, updatePatientDto);
-    return this.findOne(id);
+  // async update(id: number, updatePatientDto: UpdatePatientDto): Promise<Patient> {
+  //   await this.patientRepository.update(id, updatePatientDto);
+  //   return this.findOne(id);
+  // }
+
+
+
+async update(id: number, updatePatientDto: UpdatePatientDto): Promise<Patient> {
+  const updateData: Partial<Patient> = {};
+  
+  if (updatePatientDto.full_name) {
+    updateData.full_name = updatePatientDto.full_name;
   }
+  if (updatePatientDto.birth_date) {
+    updateData.birth_date = new Date(updatePatientDto.birth_date);
+  }
+  if (updatePatientDto.insurance_policy) {
+    updateData.insurance_policy = updatePatientDto.insurance_policy;
+  }
+  if (updatePatientDto.passport) {
+    updateData.passport = updatePatientDto.passport;
+  }
+  if (updatePatientDto.admission_date) {
+    updateData.admission_date = new Date(updatePatientDto.admission_date);
+  }
+  if (updatePatientDto.discharge_date) {
+    updateData.discharge_date = updatePatientDto.discharge_date 
+      ? new Date(updatePatientDto.discharge_date) 
+      : null;
+  }
+
+  await this.patientRepository.update(id, updateData);
+  return this.findOne(id);
+}
+
+
+
+
+
 
   async delete(id: number): Promise<{ message: string }> {
     const patient = await this.findOne(id);

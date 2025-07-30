@@ -30,40 +30,63 @@ const PatientForm: React.FC<PatientFormProps> = ({
 }) => {
   const today = format(new Date(), 'yyyy-MM-dd');
   
-  const [formData, setFormData] = useState<PatientFormData>({
-    patient_full_name: '',
-    birth_date: today,
-    insurance_policy: '',
-    passport: '',
-    admission_date: today,
-    discharge_date: ''
-  });
+const [formData, setFormData] = useState<PatientFormData>({
+  patient_full_name: '',
+  birth_date: today,
+  insurance_policy: '',
+  passport: '',
+  admission_date: today,
+  discharge_date: '',
+  doctor_id: null,
+  ward_number: null,
+  diagnos: '',
+  symptom: '',
+  allergy: '',
+  preparation: ''
+});
   
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+
   useEffect(() => {
-    if (patient) {
-      setFormData({
-        patient_full_name: patient.patient_full_name,
-        birth_date: format(parseISO(patient.birth_date), 'yyyy-MM-dd'),
-        insurance_policy: patient.insurance_policy,
-        passport: patient.passport,
-        admission_date: format(parseISO(patient.admission_date), 'yyyy-MM-dd'),
-        discharge_date: patient.discharge_date 
-          ? format(parseISO(patient.discharge_date), 'yyyy-MM-dd')
-          : ''
-      });
-    } else {
-      setFormData({
-        patient_full_name: '',
-        birth_date: today,
-        insurance_policy: '',
-        passport: '',
-        admission_date: today,
-        discharge_date: ''
-      });
-    }
-  }, [patient, today]);
+  if (patient) {
+    setFormData({
+      patient_full_name: patient.patient_full_name || patient.full_name || '', // Учитываем оба варианта
+      birth_date: patient.birth_date ? format(parseISO(patient.birth_date), 'yyyy-MM-dd') : today,
+      insurance_policy: patient.insurance_policy || '',
+      passport: patient.passport || '',
+      admission_date: patient.admission_date ? format(parseISO(patient.admission_date), 'yyyy-MM-dd') : today,
+      discharge_date: patient.discharge_date ? format(parseISO(patient.discharge_date), 'yyyy-MM-dd') : '',
+      doctor_id: patient.doctor_id || null,
+      ward_number: patient.ward_number || null,
+      diagnos: patient.diagnos || '',
+      symptom: patient.symptom || '',
+      allergy: patient.allergy || '',
+      preparation: patient.preparation || ''
+    });
+  } else {
+    setFormData({
+      patient_full_name: '',
+      birth_date: today,
+      insurance_policy: '',
+      passport: '',
+      admission_date: today,
+      discharge_date: '',
+      doctor_id: null,
+      ward_number: null,
+      diagnos: '',
+      symptom: '',
+      allergy: '',
+      preparation: ''
+    });
+  }
+}, [patient, today]);
+
+
+
+
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -73,36 +96,46 @@ const PatientForm: React.FC<PatientFormProps> = ({
     }));
   };
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!formData.patient_full_name?.trim()) {
-      newErrors.patient_full_name = 'Full name is required';
-    }
-    
-    if (!formData.insurance_policy?.match(/^[А-Я]{2}[0-9]{4}[А-Я]$/)) {
-      newErrors.insurance_policy = 'Invalid insurance policy format (XX9999X)';
-    }
-    
-    if (!formData.passport?.match(/^[0-9]{2} [0-9]{2} [0-9]{6}$/)) {
-      newErrors.passport = 'Invalid passport format (00 00 000000)';
-    }
+const validate = () => {
+  const newErrors: Record<string, string> = {};
+  
+  if (!formData.patient_full_name?.trim() || formData.patient_full_name.trim().length < 2) {
+    newErrors.patient_full_name = 'ФИО должно содержать минимум 2 символа';
+  }
+  
+  if (!formData.insurance_policy?.match(/^[А-Я]{2}[0-9]{4}[А-Я]$/)) {
+    newErrors.insurance_policy = 'Неверный формат полиса (XX9999X)';
+  }
+  
+  if (!formData.passport?.match(/^[0-9]{2} [0-9]{2} [0-9]{6}$/)) {
+    newErrors.passport = 'Неверный формат паспорта (00 00 000000)';
+  }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
-  const handleSubmit = () => {
-    if (validate()) {
-      const submitData: PatientData = {
-        ...(patient?.patient_id ? { patient_id: patient.patient_id } : {}),
-        ...formData,
-        discharge_date: formData.discharge_date || null
-      } as PatientData;
-      
-      onSubmit(submitData);
-    }
-  };
+const handleSubmit = () => {
+  if (validate()) {
+    const submitData: PatientData = {
+      ...(patient?.patient_id ? { patient_id: patient.patient_id } : {}),
+      patient_full_name: formData.patient_full_name,
+      birth_date: formData.birth_date,
+      insurance_policy: formData.insurance_policy,
+      passport: formData.passport,
+      admission_date: formData.admission_date,
+      discharge_date: formData.discharge_date || null,
+      doctor_id: formData.doctor_id || null,
+      ward_number: formData.ward_number || null,
+      diagnos: formData.diagnos || '',
+      symptom: formData.symptom || '',
+      allergy: formData.allergy || '',
+      preparation: formData.preparation || ''
+    };
+    
+    onSubmit(submitData);
+  }
+};
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">

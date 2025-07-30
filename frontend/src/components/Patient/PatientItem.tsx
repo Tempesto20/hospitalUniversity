@@ -15,13 +15,13 @@ const PatientItem: React.FC<PatientItemProps> = ({
   onEdit, 
   onDelete 
 }) => {
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return '-';
-    return format(parseISO(dateString), 'dd.MM.yyyy');
-  };
+const formatDate = (dateString: string | null | undefined) => {
+  if (!dateString) return '-';
+  return format(parseISO(dateString), 'dd.MM.yyyy');
+};
 
   return (
-    <TableRow>
+    <TableRow hover>
       <TableCell>{patient.patient_id}</TableCell>
       <TableCell>{patient.patient_full_name || '-'}</TableCell>
       <TableCell>{formatDate(patient.birth_date)}</TableCell>
@@ -33,14 +33,14 @@ const PatientItem: React.FC<PatientItemProps> = ({
       <TableCell>{patient.diagnos || '-'}</TableCell>
       <TableCell>{patient.symptom || '-'}</TableCell>
       <TableCell>{formatDate(patient.admission_date)}</TableCell>
-      <TableCell>{formatDate(patient.discharge_date)}</TableCell>
+<TableCell>{patient.discharge_date ? formatDate(patient.discharge_date) : '-'}</TableCell>
       <TableCell>{patient.allergy || '-'}</TableCell>
       <TableCell>{patient.preparation || '-'}</TableCell>
       <TableCell>
-        <IconButton onClick={() => onEdit(patient)}>
+        <IconButton onClick={() => onEdit(patient)} color="primary">
           <Edit />
         </IconButton>
-        <IconButton onClick={() => onDelete(patient.patient_id!)}>
+        <IconButton onClick={() => onDelete(patient.patient_id!)} color="error">
           <Delete />
         </IconButton>
       </TableCell>

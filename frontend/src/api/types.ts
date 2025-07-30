@@ -18,22 +18,43 @@ export interface DoctorData {
 }
 
 
+// export interface PatientData {
+//   patient_id: number;
+//   patient_full_name: string;
+//   birth_date: string;
+//   insurance_policy: string;
+//   passport: string;
+//   admission_date: string;
+//   discharge_date: string | null;
+//   ward_number?: number;
+//   department_name?: string;
+//   doctor_full_name?: string;
+//   diagnos?: string;
+//   symptom?: string;
+//   allergy?: string;
+//   preparation?: string;
+// }
+
+
 export interface PatientData {
-  patient_id: number;
-  patient_full_name: string;
+  patient_id?: number;
+  patient_full_name?: string; // Для фронтенда
+  full_name?: string; // Для бэкенда
   birth_date: string;
   insurance_policy: string;
   passport: string;
   admission_date: string;
-  discharge_date: string | null;
-  ward_number?: number;
-  department_name?: string;
-  doctor_full_name?: string;
+  discharge_date?: string | null;
+  doctor_id?: number | null;
+  ward_number?: number | null;
   diagnos?: string;
   symptom?: string;
   allergy?: string;
   preparation?: string;
+  doctor_full_name?: string;
+  department_name?: string;
 }
+
 
 
 

@@ -22,7 +22,7 @@ export class Patient {
   admission_date: Date;
 
   @Column('date', { nullable: true })
-  discharge_date: Date;
+  discharge_date: Date | null;
 
   @OneToMany(() => Appointment, appointment => appointment.patient)
   appointments: Appointment[];

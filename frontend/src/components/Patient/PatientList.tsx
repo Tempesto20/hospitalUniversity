@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, 
-  DialogActions, Box, Typography 
+  DialogActions, Box, Typography, Snackbar, Alert
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import PatientForm from './PatientForm';
@@ -14,6 +14,7 @@ import {
   updatePatient, 
   deletePatient 
 } from '../../api/api';
+import { format, parseISO } from 'date-fns';
 
 const PatientList: React.FC = () => {
   const [patients, setPatients] = useState<PatientData[]>([]);
@@ -23,20 +24,25 @@ const PatientList: React.FC = () => {
   const [patientToDelete, setPatientToDelete] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const formatDateForServer = (dateString: string) => {
+    return format(parseISO(dateString), "yyyy-MM-dd");
+  };
+
+  const loadPatients = async () => {
+    try {
+      const { data } = await fetchCombinePatients();
+      setPatients(data);
+      setLoading(false);
+    } catch (err) {
+      setError('Ошибка загрузки пациентов');
+      setLoading(false);
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    const loadPatients = async () => {
-      try {
-        const { data } = await fetchCombinePatients();
-        setPatients(data);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch patients');
-        setLoading(false);
-        console.error(err);
-      }
-    };
-
     loadPatients();
   }, []);
 
@@ -59,38 +65,96 @@ const PatientList: React.FC = () => {
     if (patientToDelete) {
       try {
         await deletePatient(patientToDelete);
-        setPatients(patients.filter(p => p.patient_id !== patientToDelete));
+        await loadPatients();
         setOpenDeleteDialog(false);
+        setSuccessMessage('Пациент успешно удалён');
       } catch (err) {
-        setError('Failed to delete patient');
+        setError('Ошибка удаления пациента');
         console.error(err);
       }
     }
   };
 
-  const handleFormSubmit = async (patient: PatientData) => {
-    try {
-      if (currentPatient?.patient_id) {
-        const { data: updatedPatient } = await updatePatient(
-          currentPatient.patient_id, 
-          patient
-        );
-        setPatients(patients.map(p => 
-          p.patient_id === currentPatient.patient_id ? updatedPatient : p
-        ));
-      } else {
-        const { data: newPatient } = await createPatient(patient);
-        setPatients([...patients, newPatient]);
-      }
-      setOpenForm(false);
-    } catch (err) {
-      setError('Failed to save patient');
-      console.error(err);
+
+  
+
+// const handleFormSubmit = async (patient: PatientData) => {
+//   try {
+//     const patientPayload = {
+//       patient_full_name: patient.patient_full_name,
+//       full_name: patient.patient_full_name, // Добавляем поле для бэкенда
+//       birth_date: patient.birth_date,
+//       insurance_policy: patient.insurance_policy,
+//       passport: patient.passport,
+//       admission_date: patient.admission_date,
+//       discharge_date: patient.discharge_date || null,
+//       doctor_id: patient.doctor_id || null,
+//       ward_number: patient.ward_number || null,
+//       diagnos: patient.diagnos || '',
+//       symptom: patient.symptom || '',
+//       allergy: patient.allergy || '',
+//       preparation: patient.preparation || ''
+//     };
+
+//     if (currentPatient?.patient_id) {
+//       await updatePatient(currentPatient.patient_id, patientPayload);
+//       setSuccessMessage('Данные пациента успешно обновлены');
+//     } else {
+//       await createPatient(patientPayload);
+//       setSuccessMessage('Пациент успешно создан');
+//     }
+//     setOpenForm(false);
+//     await loadPatients();
+//   } catch (err) {
+//     setError('Ошибка сохранения пациента: ' + (err as Error).message);
+//     console.error('Ошибка сохранения:', err);
+//   }
+// };
+
+
+
+
+
+const handleFormSubmit = async (patient: PatientData) => {
+  try {
+    const apiPayload = {
+      full_name: patient.patient_full_name,
+      birth_date: patient.birth_date,
+      insurance_policy: patient.insurance_policy,
+      passport: patient.passport,
+      admission_date: patient.admission_date,
+      discharge_date: patient.discharge_date || null,
+      doctor_id: patient.doctor_id || null,
+      ward_number: patient.ward_number || null,
+      diagnos: patient.diagnos || '',
+      symptom: patient.symptom || '',
+      allergy: patient.allergy || '',
+      preparation: patient.preparation || ''
+    };
+
+    if (currentPatient?.patient_id) {
+      await updatePatient(currentPatient.patient_id, apiPayload);
+      setSuccessMessage('Данные пациента успешно обновлены');
+    } else {
+      await createPatient(apiPayload);
+      setSuccessMessage('Пациент успешно создан');
     }
+    setOpenForm(false);
+    await loadPatients();
+  } catch (err) {
+    setError('Ошибка сохранения пациента: ' + (err as Error).message);
+    console.error('Ошибка сохранения:', err);
+  }
+};
+
+
+
+  const handleCloseSnackbar = () => {
+    setError(null);
+    setSuccessMessage(null);
   };
 
   if (loading) return <Typography>Загрузка...</Typography>;
-  if (error) return <Typography color="error">{error}</Typography>;
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -102,27 +166,27 @@ const PatientList: React.FC = () => {
           startIcon={<Add />}
           onClick={handleAddClick}
         >
-          Добавить Пациента
+          Добавить пациента
         </Button>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Номер пациента</TableCell>
-              <TableCell>ФИО пациента</TableCell>
+              <TableCell>№</TableCell>
+              <TableCell>ФИО</TableCell>
               <TableCell>Дата рождения</TableCell>
-              <TableCell>Страховой полис</TableCell>
+              <TableCell>Полис</TableCell>
               <TableCell>Паспорт</TableCell>
               <TableCell>Палата</TableCell>
               <TableCell>Отделение</TableCell>
-              <TableCell>Лечащий врач</TableCell>
+              <TableCell>Врач</TableCell>
               <TableCell>Диагноз</TableCell>
               <TableCell>Симптомы</TableCell>
-              <TableCell>Дата поступления</TableCell>
-              <TableCell>Дата выписки</TableCell>
-              <TableCell>Аллергия к препаратам</TableCell>
+              <TableCell>Поступление</TableCell>
+              <TableCell>Выписка</TableCell>
+              <TableCell>Аллергия</TableCell>
               <TableCell>Препараты</TableCell>
               <TableCell>Действия</TableCell>
             </TableRow>
@@ -150,16 +214,40 @@ const PatientList: React.FC = () => {
       <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
+        disableEnforceFocus // Добавьте это
+        disableAutoFocus // И это
       >
         <DialogTitle>Подтвердите удаление</DialogTitle>
         <DialogContent>
           Вы уверены, что хотите удалить пациента?
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Назад</Button>
-          <Button onClick={handleDeleteConfirm} color="error">Удалить</Button>
+          <Button onClick={() => setOpenDeleteDialog(false)}>Отмена</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Удалить
+          </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="error" onClose={handleCloseSnackbar}>
+          {error}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert severity="success" onClose={handleCloseSnackbar}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

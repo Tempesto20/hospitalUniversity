@@ -1,4 +1,3 @@
-// create-patient.dto.ts
 import { IsDateString, IsOptional, IsString, Length, Matches } from 'class-validator';
 
 export class CreatePatientDto {

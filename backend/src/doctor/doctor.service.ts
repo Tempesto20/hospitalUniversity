@@ -39,18 +39,6 @@ export class DoctorService {
   }
 
 
-
-
-// async create(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
-//   const doctor = this.doctorRepository.create({
-//     full_name: createDoctorDto.full_name,
-//     specialty: createDoctorDto.specialty_id ? { specialty_id: createDoctorDto.specialty_id } : null
-//   });
-  
-//   const savedDoctor = await this.doctorRepository.save(doctor);
-//   return this.findOne(savedDoctor.doctor_id);
-// }
-
 async create(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
   const doctor = this.doctorRepository.create({
     full_name: createDoctorDto.full_name,

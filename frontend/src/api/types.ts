@@ -77,17 +77,35 @@ export interface WardData {
 
 
 
+
+
+
 export interface AppointmentData {
-  appointment_id?: number; // для новых записей может отсутствовать
+  appointment_id?: number;
   patient_id: number;
-  patient_full_name?: string;
   doctor_id: number;
-  doctor_full_name?: string;
-  ward_number: number;
+  ward_id?: number | null;
+  ward_number?: number;
   department_name?: string;
   appointment_date: string;
   symptom?: string;
   diagnos?: string;
   allergy?: string;
   preparation?: string;
+  patient?: {
+    patient_id: number;
+    full_name: string;
+  };
+  doctor?: {
+    doctor_id: number;
+    full_name: string;
+  };
+  ward?: {
+    ward_id: number;
+    ward_number: number;
+    department?: {
+      department_id: number;
+      department_name: string;
+    };
+  };
 }

@@ -169,16 +169,48 @@ export const updateWard = (id: number, ward: {
 // ------------------------------------------------------------------------
 
 // Appointment API
-export const fetchAppointments = () => api.get('/appointments');
+// export const fetchAppointments = () => api.get('/appointments');
+// export const fetchAppointment = (id: number) => api.get(`/appointments/${id}`);
+// export const createAppointment = (appointment: AppointmentData) => api.post('/appointments', appointment);
+// export const updateAppointment = (id: number, appointment: AppointmentData) => api.put(`/appointments/${id}`, appointment);
+// export const deleteAppointment = (id: number) => api.delete(`/appointments/${id}`);
+
+// ------------------------------------------------------------------------
+
+
+// ------------------------------------------------------------------------
+
+
+
+
+export const fetchAppointments = () => api.get('/appointments/with-appointments');
+
+// export const fetchAppointments = () => api.get('/appointments/with-full-details');
 export const fetchAppointment = (id: number) => api.get(`/appointments/${id}`);
-export const createAppointment = (appointment: AppointmentData) => api.post('/appointments', appointment);
-export const updateAppointment = (id: number, appointment: AppointmentData) => api.put(`/appointments/${id}`, appointment);
+export const createAppointment = (appointment: {
+  patient_id: number;
+  doctor_id: number;
+  ward_id?: number | null;
+  appointment_date: string;
+  symptom?: string;
+  diagnos?: string;
+  allergy?: string;
+  preparation?: string;
+}) => {
+  return api.post('/appointments', {
+    patient_id: Number(appointment.patient_id),
+    doctor_id: Number(appointment.doctor_id),
+    ward_id: appointment.ward_id ? Number(appointment.ward_id) : null,
+    appointment_date: appointment.appointment_date,
+    symptom: appointment.symptom || null,
+    diagnos: appointment.diagnos || null,
+    allergy: appointment.allergy || null,
+    preparation: appointment.preparation || null
+  });
+};
+export const updateAppointment = (id: number, appointment: AppointmentData) => 
+  api.put(`/appointments/${id}`, appointment);
 export const deleteAppointment = (id: number) => api.delete(`/appointments/${id}`);
-
-// ------------------------------------------------------------------------
-export const fetchCombinehAppointments = () => api.get('/appointments/with-appointments');
-// ------------------------------------------------------------------------
-
 
 
 // Отчеты

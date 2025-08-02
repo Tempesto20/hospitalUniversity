@@ -2,23 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, 
-  DialogActions, Box, Typography 
+  DialogActions, Box, Typography
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import AppointmentForm from './AppointmentForm';
 import AppointmentItem from './AppointmentItem';
-import { AppointmentData } from '../../api/types';
-import { 
-  fetchCombinehAppointments, 
-  createAppointment, 
-  updateAppointment, 
-  deleteAppointment 
-} from '../../api/api';
+import { fetchAppointments, createAppointment, updateAppointment, deleteAppointment } from '../../api/api';
 
 const AppointmentList: React.FC = () => {
-  const [appointments, setAppointments] = useState<AppointmentData[]>([]);
+  const [appointments, setAppointments] = useState<any[]>([]);
   const [openForm, setOpenForm] = useState(false);
-  const [currentAppointment, setCurrentAppointment] = useState<AppointmentData | null>(null);
+  const [currentAppointment, setCurrentAppointment] = useState<any | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [appointmentToDelete, setAppointmentToDelete] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,12 +21,11 @@ const AppointmentList: React.FC = () => {
   useEffect(() => {
     const loadAppointments = async () => {
       try {
-        const { data } = await fetchCombinehAppointments();
-        // console.log('вывод данных ' + data);
+        const { data } = await fetchAppointments();
         setAppointments(data);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch appointments');
+        setError('Не удалось загрузить данные о приемах');
         setLoading(false);
         console.error(err);
       }
@@ -46,7 +39,7 @@ const AppointmentList: React.FC = () => {
     setOpenForm(true);
   };
 
-  const handleEditClick = (appointment: AppointmentData) => {
+  const handleEditClick = (appointment: any) => {
     setCurrentAppointment(appointment);
     setOpenForm(true);
   };
@@ -63,47 +56,51 @@ const AppointmentList: React.FC = () => {
         setAppointments(appointments.filter(a => a.appointment_id !== appointmentToDelete));
         setOpenDeleteDialog(false);
       } catch (err) {
-        setError('Failed to delete appointment');
+        setError('Не удалось удалить прием');
         console.error(err);
       }
     }
   };
 
-  const handleFormSubmit = async (appointment: AppointmentData) => {
-    try {
-      if (currentAppointment?.appointment_id) {
-        const { data: updatedAppointment } = await updateAppointment(
-          currentAppointment.appointment_id, 
-          appointment
-        );
-        setAppointments(appointments.map(a => 
-          a.appointment_id === currentAppointment.appointment_id ? updatedAppointment : a
-        ));
-      } else {
-        const { data: newAppointment } = await createAppointment(appointment);
-        setAppointments([...appointments, newAppointment]);
-      }
-      setOpenForm(false);
-    } catch (err) {
-      setError('Failed to save appointment');
-      console.error(err);
-    }
-  };
+const handleFormSubmit = async (appointmentData: any) => {
+  try {
+    const payload = {
+      ...appointmentData,
+      patient_id: Number(appointmentData.patient_id),
+      doctor_id: Number(appointmentData.doctor_id),
+      ward_id: appointmentData.ward_id ? Number(appointmentData.ward_id) : null
+    };
 
-  if (loading) return <Typography>Загрузка...</Typography>;
+    if (currentAppointment?.appointment_id) {
+      await updateAppointment(currentAppointment.appointment_id, payload);
+    } else {
+      await createAppointment(payload);
+    }
+    
+    // Обновляем список
+    const { data } = await fetchAppointments();
+    setAppointments(data);
+    setOpenForm(false);
+  } catch (err) {
+    setError('Не удалось сохранить прием');
+    console.error('Ошибка при сохранении:', err);
+  }
+};
+
+  if (loading) return <Typography>Загрузка данных...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
     <Box sx={{ padding: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-        <Typography variant="h4">Приемы</Typography>
+        <Typography variant="h4">Приемы пациентов</Typography>
         <Button 
           variant="contained" 
           color="primary" 
           startIcon={<Add />}
           onClick={handleAddClick}
         >
-          Добавить прием
+          Новый прием
         </Button>
       </Box>
 
@@ -111,16 +108,14 @@ const AppointmentList: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Номер приема</TableCell>
-              <TableCell>Пациен</TableCell>
-              <TableCell>Номер палаты</TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Пациент</TableCell>
+              <TableCell>Палата</TableCell>
               <TableCell>Отделение</TableCell>
-              <TableCell>Дата приема</TableCell>
-              <TableCell>Доктор</TableCell>
-              <TableCell>Сиптомы</TableCell>
+              <TableCell>Дата</TableCell>
+              <TableCell>Врач</TableCell>
+              <TableCell>Симптомы</TableCell>
               <TableCell>Диагноз</TableCell>
-              <TableCell>Аллергия</TableCell>
-              <TableCell>Препараты</TableCell>
               <TableCell>Действия</TableCell>
             </TableRow>
           </TableHead>
@@ -148,13 +143,19 @@ const AppointmentList: React.FC = () => {
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
       >
-        <DialogTitle>Подтвердите удаление</DialogTitle>
+        <DialogTitle>Подтверждение удаления</DialogTitle>
         <DialogContent>
-          Вы действительно хотите удалить прием?
+          Вы уверены, что хотите удалить этот прием? Это действие нельзя отменить.
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Назад</Button>
-          <Button onClick={handleDeleteConfirm} color="error">Удалить</Button>
+          <Button onClick={() => setOpenDeleteDialog(false)}>Отмена</Button>
+          <Button 
+            onClick={handleDeleteConfirm} 
+            color="error"
+            variant="contained"
+          >
+            Удалить
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

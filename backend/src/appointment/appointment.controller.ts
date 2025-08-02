@@ -15,10 +15,12 @@ export class AppointmentController {
   }
 
 // ------------------------------------------------------------------------
+
   @Get('/with-appointments')
   async findAllWithAppointments() {
-    return this.appointmentService.findAllWithAppointments();
+   return this.appointmentService.findAllWithAppointments();
   }
+
 // ------------------------------------------------------------------------
 
   @Get(':id')

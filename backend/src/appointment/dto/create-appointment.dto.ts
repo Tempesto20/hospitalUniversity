@@ -1,4 +1,4 @@
-import { IsInt, IsDate, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsDateString, IsString, IsOptional } from 'class-validator';
 
 export class CreateAppointmentDto {
   @IsInt()
@@ -11,8 +11,8 @@ export class CreateAppointmentDto {
   @IsOptional()
   ward_id?: number;
 
-  @IsDate()
-  appointment_date: Date;
+  @IsDateString()
+  appointment_date: string;
 
   @IsString()
   @IsOptional()

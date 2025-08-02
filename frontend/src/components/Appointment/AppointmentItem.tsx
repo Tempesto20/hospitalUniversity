@@ -1,12 +1,11 @@
 import React from 'react';
-import { TableRow, TableCell, IconButton } from '@mui/material';
+import { TableRow, TableCell, IconButton, Tooltip, Chip } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
-import { AppointmentData } from '../../api/types';
 import { format, parseISO } from 'date-fns';
 
 interface AppointmentItemProps {
-  appointment: AppointmentData;
-  onEdit: (appointment: AppointmentData) => void;
+  appointment: any;
+  onEdit: (appointment: any) => void;
   onDelete: (id: number) => void;
 }
 
@@ -15,30 +14,69 @@ const AppointmentItem: React.FC<AppointmentItemProps> = ({
   onEdit, 
   onDelete 
 }) => {
-    const formatDate = (dateString: string | null) => {
-      if (!dateString) return '-';
+  const formatDate = (dateString: string) => {
+    try {
       return format(parseISO(dateString), 'dd.MM.yyyy');
-    };
-    
+    } catch {
+      return dateString;
+    }
+  };
+
   return (
-    <TableRow>
-        <TableCell>{appointment.appointment_id}</TableCell>
-        <TableCell>{appointment.patient_full_name || '-'}</TableCell>
-        <TableCell>{appointment.ward_number || '-'}</TableCell>
-        <TableCell>{appointment.department_name || '-'}</TableCell>
-        <TableCell>{formatDate(appointment.appointment_date) || '-'}</TableCell>
-        <TableCell>{appointment.doctor_full_name || '-'}</TableCell>
-        <TableCell>{appointment.symptom || '-'}</TableCell>
-        <TableCell>{appointment.diagnos || '-'}</TableCell>
-        <TableCell>{appointment.allergy || '-'}</TableCell>
-        <TableCell>{appointment.preparation || '-' }</TableCell>
+    <TableRow hover>
+      <TableCell>{appointment.appointment_id}</TableCell>
       <TableCell>
-        <IconButton onClick={() => onEdit(appointment)}>
-          <Edit />
-        </IconButton>
-        <IconButton onClick={() => onDelete(appointment.appointment_id!)}>
-          <Delete />
-        </IconButton>
+        <strong>{appointment.patient?.full_name || 'Не указан'}</strong>
+      </TableCell>
+      <TableCell>
+        {appointment.ward?.ward_number ? (
+          <Chip 
+            label={`№${appointment.ward.ward_number}`} 
+            color="primary" 
+            size="small"
+          />
+        ) : (
+          'Не указана'
+        )}
+      </TableCell>
+      <TableCell>{appointment.ward?.department?.department_name || 'Не указано'}</TableCell>
+      <TableCell>{formatDate(appointment.appointment_date)}</TableCell>
+      <TableCell>{appointment.doctor?.full_name || 'Не указан'}</TableCell>
+      <TableCell>
+        {appointment.symptom ? (
+          <Tooltip title={appointment.symptom}>
+            <span>{appointment.symptom.substring(0, 20)}...</span>
+          </Tooltip>
+        ) : (
+          'Не указаны'
+        )}
+      </TableCell>
+      <TableCell>
+        {appointment.diagnos ? (
+          <Tooltip title={appointment.diagnos}>
+            <span>{appointment.diagnos.substring(0, 20)}...</span>
+          </Tooltip>
+        ) : (
+          'Не указан'
+        )}
+      </TableCell>
+      <TableCell>
+        <Tooltip title="Редактировать">
+          <IconButton 
+            onClick={() => onEdit(appointment)}
+            color="primary"
+          >
+            <Edit />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Удалить">
+          <IconButton 
+            onClick={() => onDelete(appointment.appointment_id)}
+            color="error"
+          >
+            <Delete />
+          </IconButton>
+        </Tooltip>
       </TableCell>
     </TableRow>
   );

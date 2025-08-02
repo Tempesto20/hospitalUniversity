@@ -8,30 +8,30 @@ export class Appointment {
   @PrimaryGeneratedColumn()
   appointment_id: number;
 
-  @ManyToOne(() => Patient, patient => patient.appointments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Patient, { eager: true })
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 
-  @ManyToOne(() => Doctor, doctor => doctor.appointments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Doctor, { eager: true })
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctor;
 
-  @ManyToOne(() => Ward, ward => ward.appointments, { onDelete: 'SET NULL' })
+  @ManyToOne(() => Ward, { eager: true, nullable: true })
   @JoinColumn({ name: 'ward_id' })
-  ward: Ward;
+  ward: Ward | null;
 
   @Column('date')
   appointment_date: Date;
 
   @Column('text', { nullable: true })
-  symptom: string;
+  symptom: string | null;
 
   @Column('text', { nullable: true })
-  diagnos: string;
+  diagnos: string | null;
 
   @Column('text', { nullable: true })
-  allergy: string;
+  allergy: string | null;
 
   @Column('text', { nullable: true })
-  preparation: string;
+  preparation: string | null;
 }

@@ -208,8 +208,57 @@ export const createAppointment = (appointment: {
     preparation: appointment.preparation || null
   });
 };
-export const updateAppointment = (id: number, appointment: AppointmentData) => 
-  api.put(`/appointments/${id}`, appointment);
+
+
+
+// export const updateAppointment = (id: number, appointment: {
+//   patient_id: number;
+//   doctor_id: number;
+//   ward_id?: number | null;
+//   appointment_date: string;
+//   symptom?: string;
+//   diagnos?: string;
+//   allergy?: string;
+//   preparation?: string;
+// }) => {
+//   return api.put(`/appointments/${id}`, {
+//     patient_id: Number(appointment.patient_id),
+//     doctor_id: Number(appointment.doctor_id),
+//     ward_id: appointment.ward_id !== undefined ? 
+//       (appointment.ward_id ? Number(appointment.ward_id) : null) : 
+//       undefined,
+//     appointment_date: appointment.appointment_date,
+//     symptom: appointment.symptom || undefined,
+//     diagnos: appointment.diagnos || undefined,
+//     allergy: appointment.allergy || undefined,
+//     preparation: appointment.preparation || undefined
+//   });
+// };
+
+
+
+export const updateAppointment = (id: number, appointment: {
+  patient_id: number;
+  doctor_id: number;
+  ward_id?: number | null;
+  appointment_date: string;
+  symptom?: string;
+  diagnos?: string;
+  allergy?: string;
+  preparation?: string;
+}) => {
+  return api.put(`/appointments/${id}`, {
+    patient_id: appointment.patient_id,
+    doctor_id: appointment.doctor_id,
+    ward_id: appointment.ward_id !== undefined ? appointment.ward_id : undefined,
+    appointment_date: appointment.appointment_date,
+    symptom: appointment.symptom,
+    diagnos: appointment.diagnos,
+    allergy: appointment.allergy,
+    preparation: appointment.preparation
+  });
+};
+
 export const deleteAppointment = (id: number) => api.delete(`/appointments/${id}`);
 
 

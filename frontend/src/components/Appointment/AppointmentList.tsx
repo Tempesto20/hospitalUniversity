@@ -65,10 +65,14 @@ const AppointmentList: React.FC = () => {
 const handleFormSubmit = async (appointmentData: any) => {
   try {
     const payload = {
-      ...appointmentData,
-      patient_id: Number(appointmentData.patient_id),
-      doctor_id: Number(appointmentData.doctor_id),
-      ward_id: appointmentData.ward_id ? Number(appointmentData.ward_id) : null
+      patient_id: appointmentData.patient_id,
+      doctor_id: appointmentData.doctor_id,
+      ward_id: appointmentData.ward_id !== undefined ? appointmentData.ward_id : undefined,
+      appointment_date: appointmentData.appointment_date,
+      symptom: appointmentData.symptom,
+      diagnos: appointmentData.diagnos,
+      allergy: appointmentData.allergy,
+      preparation: appointmentData.preparation
     };
 
     if (currentAppointment?.appointment_id) {
@@ -86,6 +90,41 @@ const handleFormSubmit = async (appointmentData: any) => {
     console.error('Ошибка при сохранении:', err);
   }
 };
+
+
+
+// const handleFormSubmit = async (appointmentData: any) => {
+//   try {
+//     const payload = {
+//       patient_id: Number(appointmentData.patient_id),
+//       doctor_id: Number(appointmentData.doctor_id),
+//       ward_id: appointmentData.ward_id !== null ? 
+//         Number(appointmentData.ward_id) : 
+//         null,
+//       appointment_date: appointmentData.appointment_date,
+//       symptom: appointmentData.symptom || undefined,
+//       diagnos: appointmentData.diagnos || undefined,
+//       allergy: appointmentData.allergy || undefined,
+//       preparation: appointmentData.preparation || undefined
+//     };
+
+//     if (currentAppointment?.appointment_id) {
+//       await updateAppointment(currentAppointment.appointment_id, payload);
+//     } else {
+//       await createAppointment(payload);
+//     }
+    
+//     // Обновляем список
+//     const { data } = await fetchAppointments();
+//     setAppointments(data);
+//     setOpenForm(false);
+//   } catch (err) {
+//     setError('Не удалось сохранить прием');
+//     console.error('Ошибка при сохранении:', err);
+//   }
+// };
+
+
 
   if (loading) return <Typography>Загрузка данных...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;

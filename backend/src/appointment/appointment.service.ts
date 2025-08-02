@@ -75,63 +75,136 @@ export class AppointmentService {
     return this.findOne(savedAppointment.appointment_id);
   }
 
-  async update(id: number, updateAppointmentDto: UpdateAppointmentDto): Promise<Appointment> {
-    const appointment = await this.findOne(id);
-    
-    if (updateAppointmentDto.patient_id) {
-      const patient = await this.patientRepository.findOneBy({ 
-        patient_id: updateAppointmentDto.patient_id 
-      });
-      if (!patient) {
-        throw new NotFoundException(`Patient with ID ${updateAppointmentDto.patient_id} not found`);
-      }
-      appointment.patient = patient;
-    }
-    
-    if (updateAppointmentDto.doctor_id) {
-      const doctor = await this.doctorRepository.findOneBy({ 
-        doctor_id: updateAppointmentDto.doctor_id 
-      });
-      if (!doctor) {
-        throw new NotFoundException(`Doctor with ID ${updateAppointmentDto.doctor_id} not found`);
-      }
-      appointment.doctor = doctor;
-    }
-    
-    if (updateAppointmentDto.ward_id !== undefined) {
-      if (updateAppointmentDto.ward_id) {
-        const ward = await this.wardRepository.findOneBy({ 
-          ward_id: updateAppointmentDto.ward_id 
-        });
-        if (!ward) {
-          throw new NotFoundException(`Ward with ID ${updateAppointmentDto.ward_id} not found`);
-        }
-        appointment.ward = ward;
-      } else {
-        appointment.ward = null;
-      }
-    }
+  
 
-    // Обновляем остальные поля
-    if (updateAppointmentDto.appointment_date) {
-      appointment.appointment_date = updateAppointmentDto.appointment_date;
-    }
-    if (updateAppointmentDto.symptom !== undefined) {
-      appointment.symptom = updateAppointmentDto.symptom;
-    }
-    if (updateAppointmentDto.diagnos !== undefined) {
-      appointment.diagnos = updateAppointmentDto.diagnos;
-    }
-    if (updateAppointmentDto.allergy !== undefined) {
-      appointment.allergy = updateAppointmentDto.allergy;
-    }
-    if (updateAppointmentDto.preparation !== undefined) {
-      appointment.preparation = updateAppointmentDto.preparation;
-    }
 
-    await this.appointmentRepository.save(appointment);
-    return this.findOne(id);
+
+
+
+// async update(id: number, updateAppointmentDto: UpdateAppointmentDto): Promise<Appointment> {
+//   const appointment = await this.findOne(id);
+  
+//   // Обновляем связи только если они предоставлены
+//   if (updateAppointmentDto.patient_id !== undefined) {
+//     const patient = await this.patientRepository.findOneBy({ 
+//       patient_id: updateAppointmentDto.patient_id 
+//     });
+//     if (!patient) {
+//       throw new NotFoundException(`Patient with ID ${updateAppointmentDto.patient_id} not found`);
+//     }
+//     appointment.patient = patient;
+//   }
+  
+//   if (updateAppointmentDto.doctor_id !== undefined) {
+//     const doctor = await this.doctorRepository.findOneBy({ 
+//       doctor_id: updateAppointmentDto.doctor_id 
+//     });
+//     if (!doctor) {
+//       throw new NotFoundException(`Doctor with ID ${updateAppointmentDto.doctor_id} not found`);
+//     }
+//     appointment.doctor = doctor;
+//   }
+  
+//   // Явная обработка ward_id (может быть null)
+//   if (updateAppointmentDto.ward_id !== undefined) {
+//     if (updateAppointmentDto.ward_id !== null) {
+//       const ward = await this.wardRepository.findOneBy({ 
+//         ward_id: updateAppointmentDto.ward_id 
+//       });
+//       if (!ward) {
+//         throw new NotFoundException(`Ward with ID ${updateAppointmentDto.ward_id} not found`);
+//       }
+//       appointment.ward = ward;
+//     } else {
+//       appointment.ward = null;
+//     }
+//   }
+
+//   // Обновляем остальные поля
+//   if (updateAppointmentDto.appointment_date !== undefined) {
+//     appointment.appointment_date = new Date(updateAppointmentDto.appointment_date);
+//   }
+//   if (updateAppointmentDto.symptom !== undefined) {
+//     appointment.symptom = updateAppointmentDto.symptom;
+//   }
+//   if (updateAppointmentDto.diagnos !== undefined) {
+//     appointment.diagnos = updateAppointmentDto.diagnos;
+//   }
+//   if (updateAppointmentDto.allergy !== undefined) {
+//     appointment.allergy = updateAppointmentDto.allergy;
+//   }
+//   if (updateAppointmentDto.preparation !== undefined) {
+//     appointment.preparation = updateAppointmentDto.preparation;
+//   }
+
+//   await this.appointmentRepository.save(appointment);
+//   return this.findOne(id);
+// }
+
+
+// appointment.service.ts
+async update(id: number, updateAppointmentDto: UpdateAppointmentDto): Promise<Appointment> {
+  const appointment = await this.findOne(id);
+  
+  if (updateAppointmentDto.patient_id !== undefined) {
+    const patient = await this.patientRepository.findOneBy({ 
+      patient_id: updateAppointmentDto.patient_id 
+    });
+    if (!patient) {
+      throw new NotFoundException(`Patient with ID ${updateAppointmentDto.patient_id} not found`);
+    }
+    appointment.patient = patient;
   }
+  
+  if (updateAppointmentDto.doctor_id !== undefined) {
+    const doctor = await this.doctorRepository.findOneBy({ 
+      doctor_id: updateAppointmentDto.doctor_id 
+    });
+    if (!doctor) {
+      throw new NotFoundException(`Doctor with ID ${updateAppointmentDto.doctor_id} not found`);
+    }
+    appointment.doctor = doctor;
+  }
+  
+  if (updateAppointmentDto.ward_id !== undefined) {
+    if (updateAppointmentDto.ward_id !== null) {
+      const ward = await this.wardRepository.findOneBy({ 
+        ward_id: updateAppointmentDto.ward_id 
+      });
+      if (!ward) {
+        throw new NotFoundException(`Ward with ID ${updateAppointmentDto.ward_id} not found`);
+      }
+      appointment.ward = ward;
+    } else {
+      appointment.ward = null;
+    }
+  }
+
+  if (updateAppointmentDto.appointment_date !== undefined) {
+    appointment.appointment_date = new Date(updateAppointmentDto.appointment_date);
+  }
+  
+  if (updateAppointmentDto.symptom !== undefined) {
+    appointment.symptom = updateAppointmentDto.symptom;
+  }
+  
+  if (updateAppointmentDto.diagnos !== undefined) {
+    appointment.diagnos = updateAppointmentDto.diagnos;
+  }
+  
+  if (updateAppointmentDto.allergy !== undefined) {
+    appointment.allergy = updateAppointmentDto.allergy;
+  }
+  
+  if (updateAppointmentDto.preparation !== undefined) {
+    appointment.preparation = updateAppointmentDto.preparation;
+  }
+
+  await this.appointmentRepository.save(appointment);
+  return this.findOne(id);
+}
+
+
 
   async delete(id: number): Promise<{ message: string }> {
     const appointment = await this.findOne(id);
